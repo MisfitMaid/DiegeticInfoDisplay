@@ -2,28 +2,44 @@ namespace DID {
 
     void drawString(const string &in str, const vec2 &in start, const float &in z) {
         for (int i = 0; i < str.Length; i++) {
-            vec2 offset = start + vec2(i*100, 0);
-            switch(int(str[i])) {
-                case 48: draw0(offset, z); break;
-                case 49: draw1(offset, z); break;
-                case 50: draw2(offset, z); break;
-                case 51: draw3(offset, z); break;
-                case 52: draw4(offset, z); break;
-                case 53: draw5(offset, z); break;
-                case 54: draw6(offset, z); break;
-                case 55: draw7(offset, z); break;
-                case 56: draw8(offset, z); break;
-                case 57: draw9(offset, z); break;
-                case 58: drawColon(offset, z); break;
-                case 47: drawSlash(offset, z); break;
-                case 43: drawPlus(offset, z); break;
-                case 45: drawMinus(offset, z); break;
-                case 46: drawPeriod(offset, z); break;
-                case 32: break;
-                default: warn("no glyph for char "+str[i]);
+            string l = str.SubStr(i, 1);
+            vec2 offset = start + vec2(i*diegeticLetterSpacing, 0);
+            if (l == " ") continue; // space
+
+            if (font.Exists(l)) {
+                dictionaryValue dv = font[l];
+                drawGlyph(cast<vec3[]>(dv), offset, z);
+            } else {
+                warn("no glyph for char "+l);
             }
         }
 
+    }
+
+    // todo: port funcs over to this with an array instead
+    void drawGlyph(vec3[] points, const vec2 &in start, float z) {
+        TypesetContext context;
+        context.scale = 1;
+        context.offset = start;
+        context.z = z;
+
+        for (uint i = 0; i < points.Length; i++) {
+            switch(int(points[i].x)) {
+                case 0: // begin path
+                    nvg::BeginPath();
+                    break;
+                case 1: // moveTo
+                    nvgMoveTo(context, points[i].y,points[i].z);
+                    break;
+                case 2: // lineTo
+                    nvgLineTo(context, points[i].y,points[i].z);
+                    break;
+                case 3: // stroke
+                    nvg::Stroke();
+                    break;
+                default: break;
+            }
+        }
     }
 
     void draw0(const vec2 &in start, float z) {
