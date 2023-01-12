@@ -1,0 +1,9 @@
+[meta]
+name = "Diegetic Information Display"
+author = "MisfitMaid"
+category = "Overlay"
+version = "0.1"
+siteid = 311
+
+[script]
+dependencies = ["Camera", "VehicleState", "PlayerState", "MLHook", "MLFeedRaceData"]
