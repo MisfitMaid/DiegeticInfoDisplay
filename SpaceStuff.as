@@ -12,17 +12,22 @@ namespace DID {
     }
 
     void nvgLineTo(TypesetContext context, float x, float y) {
-        nvg::LineTo(nvgTrans(context, x, y));
+        if (!isBehind(context, x, y)) nvg::LineTo(nvgTrans(context, x, y));
     }
 
     void nvgMoveTo(TypesetContext context, float x, float y) {
-        nvg::MoveTo(nvgTrans(context, x, y));
+        if (!isBehind(context, x, y)) nvg::MoveTo(nvgTrans(context, x, y));
 
     }
 
     vec2 nvgTrans(TypesetContext context, float x, float y) {
         vec2 ws = (vec2(x,y)+context.offset)*context.scale*0.001*diegeticScale;
         return Camera::ToScreenSpace(projectHatSpace(vec3(ws.x*-1.0, ws.y*-1.0, context.z)));
+    }
+
+    bool isBehind(TypesetContext context, float x, float y) {
+        vec2 ws = (vec2(x,y)+context.offset)*context.scale*0.001*diegeticScale;
+        return Camera::IsBehind(projectHatSpace(vec3(ws.x*-1.0, ws.y*-1.0, context.z)));
     }
 
     // stolen from hats mod

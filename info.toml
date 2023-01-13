@@ -7,3 +7,5 @@ siteid = 311
 
 [script]
 dependencies = ["Camera", "VehicleState", "MLHook", "MLFeedRaceData"]
+exports = [ "Export.as" ]
+module = "DID"

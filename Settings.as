@@ -22,7 +22,8 @@ float diegeticScale = 1.0;
 [Setting category="Rendering" color name="Diegetic Text Color"]
 vec4 diegeticColor = vec4(1.0,1.0,1.0,0.75);
 
-
+[Setting category="Rendering" name="Font" description="Select a less-performance-intensive font, or add your own custom font (~/OpenplanetNext/PluginStorage/DID/font.custom.json)"];
+DID::Fonts diegeticFont = DID::Fonts::Nixie;
 
 [Setting category="Information" min=0 drag name="Delta-Time duration" description="How long (in ms) to show delta times"]
 uint deltaTimeDuration = 3000;
@@ -31,28 +32,28 @@ uint deltaTimeDuration = 3000;
 bool deltaTimeColors = true;
 
 [Setting category="Information"]
-DIDInformationTypes LineL1 = DIDInformationTypes::Empty;
+DID::InformationTypes LineL1 = DID::InformationTypes::Empty;
 
 [Setting category="Information"]
-DIDInformationTypes LineL2 = DIDInformationTypes::Empty;
+DID::InformationTypes LineL2 = DID::InformationTypes::Empty;
 
 [Setting category="Information"]
-DIDInformationTypes LineL3 = DIDInformationTypes::LapCounter;
+DID::InformationTypes LineL3 = DID::InformationTypes::LapCounter;
 
 [Setting category="Information"]
-DIDInformationTypes LineL4 = DIDInformationTypes::CheckpointCounter;
+DID::InformationTypes LineL4 = DID::InformationTypes::CheckpointCounter;
 
 [Setting category="Information"]
-DIDInformationTypes LineR1 = DIDInformationTypes::Empty;
+DID::InformationTypes LineR1 = DID::InformationTypes::Empty;
 
 [Setting category="Information"]
-DIDInformationTypes LineR2 = DIDInformationTypes::Empty;
+DID::InformationTypes LineR2 = DID::InformationTypes::Empty;
 
 [Setting category="Information"]
-DIDInformationTypes LineR3 = DIDInformationTypes::LastCheckpointTime;
+DID::InformationTypes LineR3 = DID::InformationTypes::LastCheckpointTime;
 
 [Setting category="Information"]
-DIDInformationTypes LineR4 = DIDInformationTypes::CurrentRaceTime;
+DID::InformationTypes LineR4 = DID::InformationTypes::CurrentRaceTime;
 
 [SettingsTab name="Help & Credits"]
 void RenderHelp()
