@@ -6,12 +6,25 @@ void Render() {
     DID::Render();
 }
 
+bool keyHeldDown = false;
+void OnKeyPress(bool down, VirtualKey key)
+{
+    if (!keyHeldDown) {
+        if(key == diegeticEnabledShortcut)
+        {
+            diegeticEnabled = !diegeticEnabled;
+        }
+    }
+	keyHeldDown = down;
+}
+
 void OnSettingsChanged() {
     DID::OnSettingsChanged();
 }
 
 namespace DID {
     void Render() {
+        if (!diegeticEnabled) return;
         if (VehicleState::GetViewingPlayer() is null) return;
         nvg::StrokeWidth(diegeticStrokeWidth);
         nvg::LineCap(nvg::LineCapType::Butt);
@@ -79,6 +92,7 @@ namespace DID {
     }
 
     void step() {
+        if (!diegeticEnabled) return;
         // this is kinda dumb but whatever
 
         lanes[0] = getInfoText(LineL1, 0);

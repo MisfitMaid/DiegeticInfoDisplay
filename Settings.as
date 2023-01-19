@@ -1,3 +1,9 @@
+[Setting category="Rendering" name="Enable" description="Toggle the plugin on or off"]
+bool diegeticEnabled = true;
+
+[Setting category="Rendering" name="Quick enable toggle" description="Toggle the plugin via keyboard"]
+VirtualKey diegeticEnabledShortcut;
+
 [Setting category="Rendering" name="Render Demo" description="Places text in every line to aid in configuring layout"]
 bool renderDemo = false;
 
