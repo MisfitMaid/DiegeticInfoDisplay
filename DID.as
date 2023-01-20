@@ -130,8 +130,7 @@ namespace DID {
 
         if (VehicleState::GetViewingPlayer() is null) return "";
         CSceneVehicleVisState@ vis = VehicleState::GetVis(GetApp().GameScene, VehicleState::GetViewingPlayer()).AsyncState;
-        CSmScriptPlayer@ sapi = cast<CSmScriptPlayer>(VehicleState::GetViewingPlayer().ScriptAPI);
-        string cpTime;
+        string cpTime, curDeltaTime;
         int cpMs;
         if (plf.cpCount > 0 && (plf.CurrentRaceTime - plf.LastCpTime) < int(deltaTimeDuration) && plf.BestRaceTimes.Length > uint(plf.cpCount)) {
             cpMs = plf.BestRaceTimes[plf.cpCount-1] - plf.LastCpTime;
@@ -140,8 +139,10 @@ namespace DID {
             } else {
                 cpTime = "-" + Time::Format(cpMs, true, false);
             }
+            curDeltaTime = Time::Format(plf.lastCpTime);
         } else {
             cpTime = "";
+            curDeltaTime = (plf.CurrentRaceTime < 0) ? Time::Format(0) : Time::Format(plf.CurrentRaceTime);
         }
 
         
@@ -160,6 +161,8 @@ namespace DID {
                 return "";
             case InformationTypes::CurrentRaceTime:
                 return (plf.CurrentRaceTime < 0) ? Time::Format(0) : Time::Format(plf.CurrentRaceTime);
+            case InformationTypes::CurrentRaceTimeWithSplits:
+                return curDeltaTime;
             case InformationTypes::LapCounter:
                 return getTotLaps() == 1 ? "" : Text::Format("%d", curLap)+" / "+Text::Format("%d", mlf.LapCount);
             case InformationTypes::LapCounterAlways:
@@ -279,6 +282,7 @@ namespace DID {
     enum InformationTypes {
         Empty,
         CurrentRaceTime,
+        CurrentRaceTimeWithSplits,
         LapCounter,
         LapCounterAlways,
         CheckpointCounter,

@@ -59,7 +59,7 @@ DID::InformationTypes LineR2 = DID::InformationTypes::Empty;
 DID::InformationTypes LineR3 = DID::InformationTypes::LastCheckpointTime;
 
 [Setting category="Information"]
-DID::InformationTypes LineR4 = DID::InformationTypes::CurrentRaceTime;
+DID::InformationTypes LineR4 = DID::InformationTypes::CurrentRaceTimeWithSplits;
 
 [SettingsTab name="Help & Credits"]
 void RenderHelp()
