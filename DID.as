@@ -18,6 +18,12 @@ void OnKeyPress(bool down, VirtualKey key)
 	keyHeldDown = down;
 }
 
+void RenderMenu() {
+	if(UI::MenuItem("\\$8f0" + Icons::InfoCircle + "\\$z Diegetic Information Display", "", diegeticEnabled)) {
+		diegeticEnabled = !diegeticEnabled;
+	}
+}
+
 void OnSettingsChanged() {
     DID::OnSettingsChanged();
 }
@@ -48,6 +54,19 @@ namespace DID {
         int leftOffset = (diegeticHorizontalDistance + maxLen*100) * -1;
         int rightOffset = diegeticHorizontalDistance;
         for (uint i = 0; i < 4; i++) {
+
+            if (diegeticOutline.w > 0.0) {    
+                nvg::StrokeColor(diegeticOutline);
+                nvg::LineCap(nvg::LineCapType::Round);
+                nvg::LineJoin(nvg::LineCapType::Round);
+                nvg::StrokeWidth(diegeticStrokeWidth*3.0);
+                DID::drawString(leftPadded[i], vec2(leftOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
+                DID::drawString(lanes[i+4], vec2(rightOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
+                nvg::StrokeWidth(diegeticStrokeWidth);
+                nvg::LineCap(nvg::LineCapType::Butt);
+                nvg::LineJoin(nvg::LineCapType::Butt);
+            }
+
             nvg::StrokeColor(laneColors[i]);
             DID::drawString(leftPadded[i], vec2(leftOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
             nvg::StrokeColor(laneColors[i+4]);

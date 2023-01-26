@@ -28,6 +28,9 @@ float diegeticScale = 1.0;
 [Setting category="Rendering" color name="Diegetic Text Color"]
 vec4 diegeticColor = vec4(1.0,1.0,1.0,0.75);
 
+[Setting category="Rendering" color name="Diegetic Text Outline Color" description="Set alpha to 0 to disable. Note that this causes a pretty big performance hit if enabled."]
+vec4 diegeticOutline = vec4(0,0,0,0);
+
 [Setting category="Rendering" name="Font" description="Select a less-performance-intensive font, or add your own custom font (~/OpenplanetNext/PluginStorage/DID/font.custom.json)"];
 DID::Fonts diegeticFont = DID::Fonts::Nixie;
 
