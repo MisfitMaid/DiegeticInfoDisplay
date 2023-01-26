@@ -17,7 +17,14 @@ namespace DID {
 
     void nvgMoveTo(TypesetContext context, float x, float y) {
         if (!isBehind(context, x, y)) nvg::MoveTo(nvgTrans(context, x, y));
+    }
 
+    void nvgBezierTo(TypesetContext context, vec2 c1, vec2 c2, vec2 dest) {
+        if (isBehind(context, c1.x, c1.y)) return;
+        if (isBehind(context, c2.x, c2.y)) return;
+        if (isBehind(context, dest.x, dest.y)) return;
+
+        nvg::BezierTo(nvgTrans(context, c1.x, c1.y), nvgTrans(context, c2.x, c2.y), nvgTrans(context, dest.x, dest.y));
     }
 
     vec2 nvgTrans(TypesetContext context, float x, float y) {

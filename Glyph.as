@@ -23,6 +23,8 @@ namespace DID {
         context.offset = start;
         context.z = z;
 
+        vec2 bez1, bez2;
+
         for (uint i = 0; i < points.Length; i++) {
             switch(int(points[i].x)) {
                 case 0: // begin path
@@ -37,6 +39,14 @@ namespace DID {
                 case 3: // stroke
                     nvg::Stroke();
                     break;
+                case 4: // set bezier y1
+                    bez1 = vec2(points[i].y, points[i].z);
+                    break;
+                case 5: // set bezier y2
+                    bez2 = vec2(points[i].y, points[i].z);
+                    break;
+                case 6: // bezierTo
+                    nvgBezierTo(context, bez1, bez2, points[i].yz);
                 default: break;
             }
         }
