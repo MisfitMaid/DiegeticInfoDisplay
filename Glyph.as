@@ -47,6 +47,7 @@ namespace DID {
                     break;
                 case 6: // bezierTo
                     nvgBezierTo(context, bez1, bez2, points[i].yz);
+                    break;
                 default: break;
             }
         }
