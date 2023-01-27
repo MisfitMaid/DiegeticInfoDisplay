@@ -42,10 +42,10 @@ namespace DID {
         string[] leftPadded;
         leftPadded.Resize(4);
         for (uint i = 0; i < 4; i++) {
-            maxLen = Math::Max(lanes[i].Length, maxLen);
+            maxLen = Math::Max(lanes[i].content.Length, maxLen);
         }
         for (uint i = 0; i < 4; i++) {
-            leftPadded[i] = lanes[i];
+            leftPadded[i] = lanes[i].content;
             while (leftPadded[i].Length < maxLen) {
                 leftPadded[i] = " "+leftPadded[i]; // str_pad when 🥺
             }
@@ -54,6 +54,8 @@ namespace DID {
         int leftOffset = (diegeticHorizontalDistance + maxLen*100) * -1;
         int rightOffset = diegeticHorizontalDistance;
         for (uint i = 0; i < 4; i++) {
+            AddonHandler::LaneConfig left = lanes[i];
+            AddonHandler::LaneConfig right = lanes[i+4];
 
             if (diegeticOutline.w > 0.0) {    
                 nvg::StrokeColor(diegeticOutline);
@@ -61,25 +63,20 @@ namespace DID {
                 nvg::LineJoin(nvg::LineCapType::Round);
                 nvg::StrokeWidth(diegeticStrokeWidth*3.0);
                 DID::drawString(leftPadded[i], vec2(leftOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
-                DID::drawString(lanes[i+4], vec2(rightOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
+                DID::drawString(lanes[i+4].content, vec2(rightOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
                 nvg::StrokeWidth(diegeticStrokeWidth);
                 nvg::LineCap(nvg::LineCapType::Butt);
                 nvg::LineJoin(nvg::LineCapType::Butt);
             }
 
-            nvg::StrokeColor(laneColors[i]);
+            nvg::StrokeColor(lanes[i].color);
             DID::drawString(leftPadded[i], vec2(leftOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
-            nvg::StrokeColor(laneColors[i+4]);
-            DID::drawString(lanes[i+4], vec2(rightOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
+            nvg::StrokeColor(lanes[i+4].color);
+            DID::drawString(lanes[i+4].content, vec2(rightOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
         }    
     }
 
-    string[] lanes;
-    vec4[] laneColors;
-
-    string[] foreignLanes;
-    vec4[] foreignLaneColors;
-
+    AddonHandler::LaneConfig@[] lanes;
     dictionary font;
 
     void Main() {
@@ -103,42 +100,49 @@ namespace DID {
 
     void init() {
         lanes.Resize(8);
-        laneColors.Resize(8);
-        foreignLanes.Resize(8);
-        foreignLaneColors.Resize(8);
         font = dictionary();
         loadFont();
+
+        AddonHandler::registerLaneProviderAddon(AddonHandler::NullProvider());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::FrontSpeedProvider());
+        
     }
 
     void step() {
         if (!diegeticEnabled) return;
         // this is kinda dumb but whatever
 
-        lanes[0] = getInfoText(LineL1, 0);
-        lanes[1] = getInfoText(LineL2, 1);
-        lanes[2] = getInfoText(LineL3, 2);
-        lanes[3] = getInfoText(LineL4, 3);
+        @lanes[0] = getInfoText(LineL1, 0);
+        @lanes[1] = getInfoText(LineL2, 1);
+        @lanes[2] = getInfoText(LineL3, 2);
+        @lanes[3] = getInfoText(LineL4, 3);
 
-        lanes[4] = getInfoText(LineR1, 4);
-        lanes[5] = getInfoText(LineR2, 5);
-        lanes[6] = getInfoText(LineR3, 6);
-        lanes[7] = getInfoText(LineR4, 7);
+        @lanes[4] = getInfoText(LineR1, 4);
+        @lanes[5] = getInfoText(LineR2, 5);
+        @lanes[6] = getInfoText(LineR3, 6);
+        @lanes[7] = getInfoText(LineR4, 7);
 
         return;
     }
 
-    string getInfoText(InformationTypes type, uint slot) {
+    AddonHandler::LaneConfig@ getInfoText(const string &in type, uint slot) {
+        AddonHandler::LaneConfig defaults();
+        defaults.color = diegeticColor;
+        defaults.content = "";
         try {
-            return _getInfoText(type, slot);
+            if (AddonHandler::hasProvider(type)) {
+                AddonHandler::LaneProvider@ lp = AddonHandler::getProvider(type);
+                return lp.getLaneConfig(defaults);
+            }
         } catch {
             warn("error requesting string for slot " + Text::Format("%d", slot));
-            return "";
         }
+        AddonHandler::NullProvider np;
+        return np.getLaneConfig(defaults);
     }
 
 
     string _getInfoText(InformationTypes type, uint slot) {
-        laneColors[slot] = diegeticColor;
         if (renderDemo) {
             return "0123456789+-/:.";
         }
@@ -191,16 +195,12 @@ namespace DID {
             case InformationTypes::LastCheckpointTime:
                 if (deltaTimeColors) {
                     if (cpMs < 0) {
-                        laneColors[slot] = vec4(.869, 0.117, 0.117, .784);
+                        // laneColors[slot] = vec4(.869, 0.117, 0.117, .784);
                     } else {
-                        laneColors[slot] = vec4(0, .123, .822, .75);
+                        // laneColors[slot] = vec4(0, .123, .822, .75);
                     }
                 }
                 return cpTime;
-            case InformationTypes::VehicleSpeed:
-                return Text::Format("%.0f", vis.FrontSpeed * 3.6f);
-            case InformationTypes::VehicleSideSpeed:
-                return Text::Format("%.0f", Math::Abs(VehicleState::GetSideSpeed(vis)) * 3.6f);
             case InformationTypes::VehicleWetness:
                 if (vis.WetnessValue01 < 0.01) return "";
                 return Text::Format("%.0f", vis.WetnessValue01 * 100);
@@ -214,9 +214,6 @@ namespace DID {
                 return Text::Format("%d", vis.CurGear);
             case InformationTypes::VehicleRPM:
                 return Text::Format("%.01f", VehicleState::GetRPM(vis) / 1000.0f);
-            case InformationTypes::ReserveForOtherPlugin:
-                laneColors[slot] = foreignLaneColors[slot];
-                return foreignLanes[slot];
             default:
                 return "";
         }

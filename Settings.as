@@ -41,28 +41,28 @@ uint deltaTimeDuration = 3000;
 bool deltaTimeColors = true;
 
 [Setting category="Information"]
-DID::InformationTypes LineL1 = DID::InformationTypes::Empty;
+string LineL1 = "DID/NullProvider";
 
 [Setting category="Information"]
-DID::InformationTypes LineL2 = DID::InformationTypes::Empty;
+string LineL2 = "DID/NullProvider";
 
 [Setting category="Information"]
-DID::InformationTypes LineL3 = DID::InformationTypes::LapCounter;
+string LineL3 = "DID/NullProvider";
 
 [Setting category="Information"]
-DID::InformationTypes LineL4 = DID::InformationTypes::CheckpointCounter;
+string LineL4 = "DID/NullProvider";
 
 [Setting category="Information"]
-DID::InformationTypes LineR1 = DID::InformationTypes::Empty;
+string LineR1 = "DID/NullProvider";
 
 [Setting category="Information"]
-DID::InformationTypes LineR2 = DID::InformationTypes::Empty;
+string LineR2 = "DID/NullProvider";
 
 [Setting category="Information"]
-DID::InformationTypes LineR3 = DID::InformationTypes::LastCheckpointTime;
+string LineR3 = "DID/NullProvider";
 
 [Setting category="Information"]
-DID::InformationTypes LineR4 = DID::InformationTypes::CurrentRaceTimeWithSplits;
+string LineR4 = "DID/NullProvider";
 
 [SettingsTab name="Help & Credits"]
 void RenderHelp()
