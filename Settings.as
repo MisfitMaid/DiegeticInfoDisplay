@@ -28,43 +28,43 @@ vec3 diegeticCustomOffset = vec3(0,0,0);
 [Setting category="Rendering" drag name="Scale" description="Advanced adjustment, good luck!"]
 float diegeticScale = 1.0;
 
-[Setting category="Rendering" color name="Diegetic Text Color"]
-vec4 diegeticColor = vec4(1.0,1.0,1.0,0.75);
-
-[Setting category="Rendering" color name="Diegetic Text Outline Color" description="Set alpha to 0 to disable. Note that this causes a pretty big performance hit if enabled."]
-vec4 diegeticOutline = vec4(0,0,0,0);
-
 [Setting category="Rendering" name="Font" description="Select a less-performance-intensive font, or add your own custom font (~/OpenplanetNext/PluginStorage/DID/font.custom.json)"];
 DID::Fonts diegeticFont = DID::Fonts::Nixie;
 
-[Setting category="Information" min=0 drag name="Delta-Time duration" description="How long (in ms) to show delta times"]
+[Setting category="Colors" color name="Diegetic Text Color"]
+vec4 diegeticColor = vec4(1.0,1.0,1.0,0.75);
+
+[Setting category="Colors" color name="Diegetic Text Outline Color" description="Set alpha to 0 to disable. Note that this causes a pretty big performance hit if enabled."]
+vec4 diegeticOutline = vec4(0,0,0,0);
+
+[Setting category="Colors" min=0 drag name="Delta-Time duration" description="How long (in ms) to show delta times"]
 uint deltaTimeDuration = 3000;
 
-[Setting category="Information" name="Delta-Time coloration" description="Color delta-times blue or red"]
+[Setting category="Colors" name="Delta-Time coloration" description="Color delta-times blue or red"]
 bool deltaTimeColors = true;
 
-[Setting category="Information" color name="Custom Color (L1)" description="Set alpha to 0 to use default text color."]
+[Setting category="Colors" color name="Custom Color (L1)" description="Set alpha to 0 to use default text color."]
 vec4 CustomColorLineL1 = vec4(0,0,0,0);
 
-[Setting category="Information" color name="Custom Color (L2)" description="Set alpha to 0 to use default text color."]
+[Setting category="Colors" color name="Custom Color (L2)" description="Set alpha to 0 to use default text color."]
 vec4 CustomColorLineL2 = vec4(0,0,0,0);
 
-[Setting category="Information" color name="Custom Color (L3)" description="Set alpha to 0 to use default text color."]
+[Setting category="Colors" color name="Custom Color (L3)" description="Set alpha to 0 to use default text color."]
 vec4 CustomColorLineL3 = vec4(0,0,0,0);
 
-[Setting category="Information" color name="Custom Color (L4)" description="Set alpha to 0 to use default text color."]
+[Setting category="Colors" color name="Custom Color (L4)" description="Set alpha to 0 to use default text color."]
 vec4 CustomColorLineL4 = vec4(0,0,0,0);
 
-[Setting category="Information" color name="Custom Color (R1)" description="Set alpha to 0 to use default text color."]
+[Setting category="Colors" color name="Custom Color (R1)" description="Set alpha to 0 to use default text color."]
 vec4 CustomColorLineR1 = vec4(0,0,0,0);
 
-[Setting category="Information" color name="Custom Color (R2)" description="Set alpha to 0 to use default text color."]
+[Setting category="Colors" color name="Custom Color (R2)" description="Set alpha to 0 to use default text color."]
 vec4 CustomColorLineR2 = vec4(0,0,0,0);
 
-[Setting category="Information" color name="Custom Color (R3)" description="Set alpha to 0 to use default text color."]
+[Setting category="Colors" color name="Custom Color (R3)" description="Set alpha to 0 to use default text color."]
 vec4 CustomColorLineR3 = vec4(0,0,0,0);
 
-[Setting category="Information" color name="Custom Color (R4)" description="Set alpha to 0 to use default text color."]
+[Setting category="Colors" color name="Custom Color (R4)" description="Set alpha to 0 to use default text color."]
 vec4 CustomColorLineR4 = vec4(0,0,0,0);
 
 [Setting category="Information" hidden]
@@ -111,7 +111,7 @@ string LineR4 =
 	"DID/NullProvider";
 #endif
 
-[SettingsTab name="Info to display"]
+[SettingsTab name="Info to display" order="1" icon="InfoCircle"]
 void RenderSettingsInformation() {
 	LineL1 = laneSelectionDropdown(LineL1, "Top Left");
 	LineL2 = laneSelectionDropdown(LineL2, "Upper Mid Left");
@@ -142,7 +142,7 @@ string friendlyDropdownName(DID::AddonHandler::LaneProviderSettings settings) {
 	return "\\$z" + settings.friendlyName + "\\$666 by " + settings.author + "\\$z";
 }
 
-[SettingsTab name="Help & Credits"]
+[SettingsTab name="Help & Credits" order="2" icon="QuestionCircle"]
 void RenderSettingsHelp()
 {
 	UI::TextWrapped("DID is currently in early development. If you encounter any issues or have a feature request, please reach out so that I can get it taken care of! :)");
