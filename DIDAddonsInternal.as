@@ -72,7 +72,6 @@ namespace DID {
                     c.content = Text::Format("%.0f", vis.InputSteer * 100);
                 }
                 return c;
-                return c;
             }
 
         }
