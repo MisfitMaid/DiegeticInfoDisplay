@@ -122,6 +122,9 @@ void RenderSettingsInformation() {
 	LineR2 = laneSelectionDropdown(LineR2, "Upper Mid Right");
 	LineR3 = laneSelectionDropdown(LineR3, "Lower Mid Right");
 	LineR4 = laneSelectionDropdown(LineR4, "Bottom Right");
+#if !DEPENDENCY_MLFEEDRACEDATA
+	UI::Markdown("Some builtin info providers require [MLFeed](https://openplanet.dev/plugin/mlfeedracedata), which is not loaded. Please install this plugin to enable these.");
+#endif
 }
 
 string laneSelectionDropdown(const string &in current, const string &in label) {
