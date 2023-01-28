@@ -47,10 +47,20 @@ string LineL1 = "DID/NullProvider";
 string LineL2 = "DID/NullProvider";
 
 [Setting category="Information"]
-string LineL3 = "DID/NullProvider";
+string LineL3 = 
+#if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
+	"DID/CurrentLap";
+#else
+	"DID/NullProvider";
+#endif
 
 [Setting category="Information"]
-string LineL4 = "DID/NullProvider";
+string LineL4 = 
+#if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
+	"DID/CurrentCheckpoint";
+#else
+	"DID/NullProvider";
+#endif
 
 [Setting category="Information"]
 string LineR1 = "DID/NullProvider";
@@ -59,10 +69,20 @@ string LineR1 = "DID/NullProvider";
 string LineR2 = "DID/NullProvider";
 
 [Setting category="Information"]
-string LineR3 = "DID/NullProvider";
+string LineR3 = 
+#if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
+	"DID/SplitDelta";
+#else
+	"DID/NullProvider";
+#endif
 
 [Setting category="Information"]
-string LineR4 = "DID/NullProvider";
+string LineR4 = 
+#if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
+	"DID/RaceTimeSplit";
+#else
+	"DID/NullProvider";
+#endif
 
 [SettingsTab name="Help & Credits"]
 void RenderHelp()

@@ -54,8 +54,8 @@ namespace DID {
         int leftOffset = (diegeticHorizontalDistance + maxLen*100) * -1;
         int rightOffset = diegeticHorizontalDistance;
         for (uint i = 0; i < 4; i++) {
-            AddonHandler::LaneConfig left = lanes[i];
-            AddonHandler::LaneConfig right = lanes[i+4];
+            AddonHandler::LaneConfig@ left = lanes[i];
+            AddonHandler::LaneConfig@ right = lanes[i+4];
 
             if (diegeticOutline.w > 0.0) {    
                 nvg::StrokeColor(diegeticOutline);
@@ -76,7 +76,7 @@ namespace DID {
         }    
     }
 
-    AddonHandler::LaneConfig@[] lanes;
+    DID::AddonHandler::LaneConfig@[] lanes;
     dictionary font;
 
     void Main() {
@@ -105,7 +105,24 @@ namespace DID {
 
         AddonHandler::registerLaneProviderAddon(AddonHandler::NullProvider());
         AddonHandler::registerLaneProviderAddon(AddonHandler::FrontSpeedProvider());
-        
+        AddonHandler::registerLaneProviderAddon(AddonHandler::SideSpeedProvider());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::WetTiresProvider());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::GearProvider());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::RPMProvider());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::IceTireProviderAvg());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::IceTireProviderFL());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::IceTireProviderFR());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::IceTireProviderRL());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::IceTireProviderRR());
+
+#if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
+        AddonHandler::registerLaneProviderAddon(AddonHandler::RaceTimeHandler());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::RaceTimeSplitHandler());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::SplitDeltaHandler());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::CurrentLapHandler());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::CurrentLapAlwaysHandler());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::CurrenCheckpointHandler());
+#endif
     }
 
     void step() {
@@ -129,6 +146,12 @@ namespace DID {
         AddonHandler::LaneConfig defaults();
         defaults.color = diegeticColor;
         defaults.content = "";
+
+        if (renderDemo) {
+            AddonHandler::DemoProvider dp;
+            return dp.getLaneConfig(defaults);
+        }
+
         try {
             if (AddonHandler::hasProvider(type)) {
                 AddonHandler::LaneProvider@ lp = AddonHandler::getProvider(type);
@@ -139,84 +162,6 @@ namespace DID {
         }
         AddonHandler::NullProvider np;
         return np.getLaneConfig(defaults);
-    }
-
-
-    string _getInfoText(InformationTypes type, uint slot) {
-        if (renderDemo) {
-            return "0123456789+-/:.";
-        }
-        const MLFeed::HookRaceStatsEventsBase_V3@ mlf = MLFeed::GetRaceData_V3();
-        const MLFeed::PlayerCpInfo_V3@ plf = mlf.GetPlayer_V3(MLFeed::LocalPlayersName);
-
-        if (plf.spawnStatus == MLFeed::SpawnStatus::NotSpawned) return "";
-
-        if (VehicleState::GetViewingPlayer() is null) return "";
-        CSceneVehicleVisState@ vis = VehicleState::GetVis(GetApp().GameScene, VehicleState::GetViewingPlayer()).AsyncState;
-        string cpTime, curDeltaTime;
-        int cpMs;
-        if (plf.cpCount > 0 && (plf.CurrentRaceTime - plf.LastCpTime) < int(deltaTimeDuration) && plf.BestRaceTimes.Length > uint(plf.cpCount)) {
-            cpMs = plf.BestRaceTimes[plf.cpCount-1] - plf.LastCpTime;
-            if (cpMs < 0) {
-                cpTime = "+" + Time::Format(cpMs*-1, true, false);
-            } else {
-                cpTime = "-" + Time::Format(cpMs, true, false);
-            }
-            curDeltaTime = Time::Format(plf.lastCpTime);
-        } else {
-            cpTime = "";
-            curDeltaTime = (plf.CurrentRaceTime < 0) ? Time::Format(0) : Time::Format(plf.CurrentRaceTime);
-        }
-
-        
-
-        uint curCP, curLap;
-        if (mlf.LapCount > 1) {
-            curCP = plf.CpCount % (mlf.CpCount+1);
-            curLap = (plf.CpCount / (mlf.CpCount+1))+1;
-        } else {
-            curCP = plf.CpCount;
-            curLap = plf.CpCount;
-        }
-
-        switch(type) {
-            case InformationTypes::Empty:
-                return "";
-            case InformationTypes::CurrentRaceTime:
-                return (plf.CurrentRaceTime < 0) ? Time::Format(0) : Time::Format(plf.CurrentRaceTime);
-            case InformationTypes::CurrentRaceTimeWithSplits:
-                return curDeltaTime;
-            case InformationTypes::LapCounter:
-                return getTotLaps() == 1 ? "" : Text::Format("%d", curLap)+" / "+Text::Format("%d", mlf.LapCount);
-            case InformationTypes::LapCounterAlways:
-                return Text::Format("%d", curLap)+" / "+Text::Format("%d", mlf.LapCount);
-            case InformationTypes::CheckpointCounter:
-                return Text::Format("%d", curCP)+" / "+Text::Format("%d", mlf.CpCount);
-            case InformationTypes::LastCheckpointTime:
-                if (deltaTimeColors) {
-                    if (cpMs < 0) {
-                        // laneColors[slot] = vec4(.869, 0.117, 0.117, .784);
-                    } else {
-                        // laneColors[slot] = vec4(0, .123, .822, .75);
-                    }
-                }
-                return cpTime;
-            case InformationTypes::VehicleWetness:
-                if (vis.WetnessValue01 < 0.01) return "";
-                return Text::Format("%.0f", vis.WetnessValue01 * 100);
-            case InformationTypes::VehicleIcynessFL:
-            case InformationTypes::VehicleIcynessFR:
-            case InformationTypes::VehicleIcynessRL:
-            case InformationTypes::VehicleIcynessRR:
-            case InformationTypes::VehicleIcynessOverall:
-                return getIcynessPct(type, vis);
-            case InformationTypes::VehicleGear:
-                return Text::Format("%d", vis.CurGear);
-            case InformationTypes::VehicleRPM:
-                return Text::Format("%.01f", VehicleState::GetRPM(vis) / 1000.0f);
-            default:
-                return "";
-        }
     }
 
     // from checkpoint counter
@@ -253,24 +198,6 @@ namespace DID {
         return _maxCP;
     }
 
-    string getIcynessPct(InformationTypes tire, CSceneVehicleVisState@ vis) {
-        float ice;
-        switch (tire) {
-            case InformationTypes::VehicleIcynessFL: ice = vis.FLIcing01; break;
-            case InformationTypes::VehicleIcynessFR: ice = vis.FRIcing01; break;
-            case InformationTypes::VehicleIcynessRL: ice = vis.RLIcing01; break;
-            case InformationTypes::VehicleIcynessRR: ice = vis.RRIcing01; break;
-            case InformationTypes::VehicleIcynessOverall:
-                ice = (vis.FLIcing01 + vis.FRIcing01 + vis.RLIcing01 + vis.RRIcing01) / 4.0;
-                break;
-            default: // how
-                ice = 0;
-                break;
-        }
-        if (ice < 0.01) return "";
-        return Text::Format("%.0f", ice * 100);
-    }
-
     void loadFont() {
         Json::Value json;
         switch (diegeticFont) {
@@ -293,27 +220,6 @@ namespace DID {
             }
             font.Set(glyph, pts);
         }
-    }
-
-    enum InformationTypes {
-        Empty,
-        CurrentRaceTime,
-        CurrentRaceTimeWithSplits,
-        LapCounter,
-        LapCounterAlways,
-        CheckpointCounter,
-        LastCheckpointTime,
-        VehicleSpeed,
-        VehicleSideSpeed,
-        VehicleWetness,
-        VehicleIcynessOverall,
-        VehicleIcynessFL,
-        VehicleIcynessFR,
-        VehicleIcynessRL,
-        VehicleIcynessRR,
-        VehicleGear,
-        VehicleRPM,
-        ReserveForOtherPlugin
     }
 
     enum Fonts {

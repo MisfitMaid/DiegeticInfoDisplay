@@ -9,6 +9,14 @@ namespace DID {
             return true;
         }
 
+        string[] laneProviderPlugins;
+        bool hasGottenAddonsFrom(const string &in plugin) {
+            for (uint i = 0; i < laneProviderPlugins.Length; i++) {
+                if (laneProviderPlugins[i] == plugin) return true;
+            }
+            return false;
+        }
+
         bool hasProvider(const string &in identifier) {
             for (uint i = 0; i < laneProviders.Length; i++) {
                 LaneProviderSettings@ setup = laneProviders[i].getProviderSetup();
