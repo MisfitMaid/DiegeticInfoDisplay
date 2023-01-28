@@ -1,5 +1,4 @@
 namespace DID {
-    namespace AddonHandler {
 
         class DemoProvider : LaneProvider {
             LaneProviderSettings@ getProviderSetup() {
@@ -228,5 +227,4 @@ namespace DID {
             if (ice < 0.01) return "";
             return Text::Format("%.0f", ice * 100);
         }
-    }
 }

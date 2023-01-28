@@ -4,7 +4,7 @@ void Main() {
 
 void Render() {
     if (UI::IsGameUIVisible() || !diegeticDisabledWithUI) {
-        if (!DID::AddonHandler::diegeticDisplayOverridden) {
+        if (!DID::diegeticDisplayOverridden) {
             DID::Render();
         }
     }
@@ -58,8 +58,8 @@ namespace DID {
         int leftOffset = (diegeticHorizontalDistance + maxLen*100) * -1;
         int rightOffset = diegeticHorizontalDistance;
         for (uint i = 0; i < 4; i++) {
-            AddonHandler::LaneConfig@ left = lanes[i];
-            AddonHandler::LaneConfig@ right = lanes[i+4];
+            LaneConfig@ left = lanes[i];
+            LaneConfig@ right = lanes[i+4];
 
             if (diegeticOutline.w > 0.0) {    
                 nvg::StrokeColor(diegeticOutline);
@@ -80,7 +80,7 @@ namespace DID {
         }    
     }
 
-    DID::AddonHandler::LaneConfig@[] lanes;
+    DID::LaneConfig@[] lanes;
     dictionary font;
 
     void Main() {
@@ -107,26 +107,26 @@ namespace DID {
         font = dictionary();
         loadFont();
 
-        AddonHandler::registerLaneProviderAddon(AddonHandler::NullProvider());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::FrontSpeedProvider());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::SideSpeedProvider());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::SteeringProvider());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::WetTiresProvider());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::GearProvider());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::RPMProvider());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::IceTireProviderAvg());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::IceTireProviderFL());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::IceTireProviderFR());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::IceTireProviderRL());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::IceTireProviderRR());
+        registerLaneProviderAddon(NullProvider());
+        registerLaneProviderAddon(FrontSpeedProvider());
+        registerLaneProviderAddon(SideSpeedProvider());
+        registerLaneProviderAddon(SteeringProvider());
+        registerLaneProviderAddon(WetTiresProvider());
+        registerLaneProviderAddon(GearProvider());
+        registerLaneProviderAddon(RPMProvider());
+        registerLaneProviderAddon(IceTireProviderAvg());
+        registerLaneProviderAddon(IceTireProviderFL());
+        registerLaneProviderAddon(IceTireProviderFR());
+        registerLaneProviderAddon(IceTireProviderRL());
+        registerLaneProviderAddon(IceTireProviderRR());
 
 #if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
-        AddonHandler::registerLaneProviderAddon(AddonHandler::RaceTimeHandler());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::RaceTimeSplitHandler());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::SplitDeltaHandler());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::CurrentLapHandler());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::CurrentLapAlwaysHandler());
-        AddonHandler::registerLaneProviderAddon(AddonHandler::CurrenCheckpointHandler());
+        registerLaneProviderAddon(RaceTimeHandler());
+        registerLaneProviderAddon(RaceTimeSplitHandler());
+        registerLaneProviderAddon(SplitDeltaHandler());
+        registerLaneProviderAddon(CurrentLapHandler());
+        registerLaneProviderAddon(CurrentLapAlwaysHandler());
+        registerLaneProviderAddon(CurrenCheckpointHandler());
 #endif
     }
 
@@ -147,25 +147,25 @@ namespace DID {
         return;
     }
 
-    AddonHandler::LaneConfig@ getInfoText(const string &in type, uint slot) {
-        AddonHandler::LaneConfig defaults();
+    LaneConfig@ getInfoText(const string &in type, uint slot) {
+        LaneConfig defaults();
         defaults.color = getDefaultLaneColor(slot);
         defaults.content = "";
 
         if (renderDemo) {
-            AddonHandler::DemoProvider dp;
+            DemoProvider dp;
             return dp.getLaneConfig(defaults);
         }
 
         try {
-            if (AddonHandler::hasProvider(type)) {
-                AddonHandler::LaneProvider@ lp = AddonHandler::getProvider(type);
+            if (hasProvider(type)) {
+                LaneProvider@ lp = getProvider(type);
                 return lp.getLaneConfig(defaults);
             }
         } catch {
             warn("error requesting string for slot " + Text::Format("%d", slot));
         }
-        AddonHandler::NullProvider np;
+        NullProvider np;
         return np.getLaneConfig(defaults);
     }
 

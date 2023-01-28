@@ -1,6 +1,5 @@
 #if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
 namespace DID {
-    namespace AddonHandler {
         
         class RaceTimeHandler : LaneProvider {
             LaneProviderSettings@ getProviderSetup() {
@@ -144,6 +143,5 @@ namespace DID {
             }
         }
 
-    }
 }
 #endif

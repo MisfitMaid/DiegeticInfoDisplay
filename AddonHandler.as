@@ -1,5 +1,4 @@
 namespace DID {
-    namespace AddonHandler {
 
         LaneProvider@[] laneProviders;
         bool registerLaneProviderAddon(LaneProvider@ provider) {
@@ -16,6 +15,10 @@ namespace DID {
             }
             return false;
         }
+		
+		void setGottenAddonsFrom(const string &in plugin) {
+			laneProviderPlugins.InsertLast(plugin);
+		}
 
         bool diegeticDisplayOverridden = false;
         void overrideDiegeticDisplay(bool disabled) {
@@ -47,5 +50,4 @@ namespace DID {
             NullProvider thisShouldntEverHappenButItWontCompile;
             return thisShouldntEverHappenButItWontCompile;
         }
-    }
 }

@@ -125,9 +125,9 @@ void RenderSettingsInformation() {
 }
 
 string laneSelectionDropdown(const string &in current, const string &in label) {
-	if (UI::BeginCombo(label, friendlyDropdownName(DID::AddonHandler::getProvider(current).getProviderSetup()), UI::ComboFlags::None)) {
-		for (uint i = 0; i < DID::AddonHandler::laneProviders.Length; i++) {
-			DID::AddonHandler::LaneProvider@ lp = DID::AddonHandler::laneProviders[i];
+	if (UI::BeginCombo(label, friendlyDropdownName(DID::getProvider(current).getProviderSetup()), UI::ComboFlags::None)) {
+		for (uint i = 0; i < DID::laneProviders.Length; i++) {
+			DID::LaneProvider@ lp = DID::laneProviders[i];
 			if (UI::Selectable(friendlyDropdownName(lp.getProviderSetup()), lp.getProviderSetup().internalName == current)) {
 				UI::EndCombo();
 				return lp.getProviderSetup().internalName;
@@ -138,7 +138,7 @@ string laneSelectionDropdown(const string &in current, const string &in label) {
 	return current;
 }
 
-string friendlyDropdownName(DID::AddonHandler::LaneProviderSettings settings) {
+string friendlyDropdownName(DID::LaneProviderSettings settings) {
 	return "\\$z" + settings.friendlyName + "\\$666 by " + settings.author + "\\$z";
 }
 

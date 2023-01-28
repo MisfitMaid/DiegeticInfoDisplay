@@ -1,16 +1,15 @@
 namespace DID {
-    namespace AddonHandler {
-        interface LaneProvider {
+        shared interface LaneProvider {
             LaneProviderSettings@ getProviderSetup();
             LaneConfig@ getLaneConfig(LaneConfig@ &in defaults);
         }
 
-        class LaneConfig {
-            string content = "";
-            vec4 color = diegeticColor;
+        shared class LaneConfig {
+            string content;
+            vec4 color;
         }
 
-        class LaneProviderSettings {
+        shared class LaneProviderSettings {
             string internalName;
             string friendlyName;
             string author;
@@ -31,5 +30,4 @@ namespace DID {
 
         }
 
-    }
 }
