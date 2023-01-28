@@ -55,6 +55,29 @@ namespace DID {
 
         }
 
+        class SteeringProvider : LaneProvider {
+            LaneProviderSettings@ getProviderSetup() {
+                LaneProviderSettings settings;
+                settings.author = "MisfitMaid";
+                settings.internalName = "DID/Steering";
+                settings.friendlyName = "Steering Angle";
+                return settings;
+            }
+
+            LaneConfig@ getLaneConfig(LaneConfig@ &in defaults) {
+                LaneConfig c = defaults;
+                CSceneVehicleVisState@ vis = VehicleState::GetVis(GetApp().GameScene, VehicleState::GetViewingPlayer()).AsyncState;
+                if (vis.InputSteer < 0.01 && vis.InputSteer > -0.01) {
+                    c.content = "";
+                } else {
+                    c.content = Text::Format("%.0f", vis.InputSteer * 100);
+                }
+                return c;
+                return c;
+            }
+
+        }
+
         class WetTiresProvider : LaneProvider {
             LaneProviderSettings@ getProviderSetup() {
                 LaneProviderSettings settings;

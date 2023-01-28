@@ -110,6 +110,7 @@ namespace DID {
         AddonHandler::registerLaneProviderAddon(AddonHandler::NullProvider());
         AddonHandler::registerLaneProviderAddon(AddonHandler::FrontSpeedProvider());
         AddonHandler::registerLaneProviderAddon(AddonHandler::SideSpeedProvider());
+        AddonHandler::registerLaneProviderAddon(AddonHandler::SteeringProvider());
         AddonHandler::registerLaneProviderAddon(AddonHandler::WetTiresProvider());
         AddonHandler::registerLaneProviderAddon(AddonHandler::GearProvider());
         AddonHandler::registerLaneProviderAddon(AddonHandler::RPMProvider());
