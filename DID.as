@@ -36,6 +36,9 @@ namespace DID {
     void Render() {
         if (!diegeticEnabled) return;
         if (VehicleState::GetViewingPlayer() is null) return;
+
+        if (GetApp().Network.PlaygroundClientScriptAPI.IsInGameMenuDisplayed) return;
+
         nvg::StrokeWidth(diegeticStrokeWidth);
         nvg::LineCap(nvg::LineCapType::Butt);
         nvg::LineJoin(nvg::LineCapType::Butt);
