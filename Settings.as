@@ -1,6 +1,9 @@
 [Setting category="Rendering" name="Enable" description="Toggle the plugin on or off"]
 bool diegeticEnabled = true;
 
+[Setting category="Rendering" name="Hide with hidden UI" description="Hides the plugin when UI is disabled"]
+bool diegeticDisabledWithUI = false;
+
 [Setting category="Rendering" name="Quick enable toggle" description="Toggle the plugin via keyboard"]
 VirtualKey diegeticEnabledShortcut;
 

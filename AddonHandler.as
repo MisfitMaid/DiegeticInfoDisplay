@@ -17,6 +17,15 @@ namespace DID {
             return false;
         }
 
+        bool diegeticDisplayOverridden = false;
+        void overrideDiegeticDisplay(bool disabled) {
+            diegeticDisplayOverridden = disabled;
+        }
+
+        bool overrideDiegeticDisplayStatus() {
+            return diegeticDisplayOverridden;
+        }
+
         bool hasProvider(const string &in identifier) {
             for (uint i = 0; i < laneProviders.Length; i++) {
                 LaneProviderSettings@ setup = laneProviders[i].getProviderSetup();

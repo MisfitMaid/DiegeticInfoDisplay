@@ -3,7 +3,11 @@ void Main() {
 }
 
 void Render() {
-    DID::Render();
+    if (UI::IsGameUIVisible() || !diegeticDisabledWithUI) {
+        if (!DID::AddonHandler::diegeticDisplayOverridden) {
+            DID::Render();
+        }
+    }
 }
 
 bool keyHeldDown = false;
