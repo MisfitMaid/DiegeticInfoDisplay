@@ -37,16 +37,16 @@ DID::Fonts diegeticFont = DID::Fonts::Nixie;
 [Setting category="Information" min=0 drag name="Delta-Time duration" description="How long (in ms) to show delta times"]
 uint deltaTimeDuration = 3000;
 
-[Setting category="Information" min=0 drag name="Delta-Time coloration" description="Color delta-times blue or red"]
+[Setting category="Information" name="Delta-Time coloration" description="Color delta-times blue or red"]
 bool deltaTimeColors = true;
 
-[Setting category="Information"]
+[Setting category="Information" hidden]
 string LineL1 = "DID/NullProvider";
 
-[Setting category="Information"]
+[Setting category="Information" hidden]
 string LineL2 = "DID/NullProvider";
 
-[Setting category="Information"]
+[Setting category="Information" hidden]
 string LineL3 = 
 #if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
 	"DID/CurrentLap";
@@ -54,7 +54,7 @@ string LineL3 =
 	"DID/NullProvider";
 #endif
 
-[Setting category="Information"]
+[Setting category="Information" hidden]
 string LineL4 = 
 #if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
 	"DID/CurrentCheckpoint";
@@ -62,13 +62,13 @@ string LineL4 =
 	"DID/NullProvider";
 #endif
 
-[Setting category="Information"]
+[Setting category="Information" hidden]
 string LineR1 = "DID/NullProvider";
 
-[Setting category="Information"]
+[Setting category="Information" hidden]
 string LineR2 = "DID/NullProvider";
 
-[Setting category="Information"]
+[Setting category="Information" hidden]
 string LineR3 = 
 #if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
 	"DID/SplitDelta";
@@ -76,7 +76,7 @@ string LineR3 =
 	"DID/NullProvider";
 #endif
 
-[Setting category="Information"]
+[Setting category="Information" hidden]
 string LineR4 = 
 #if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
 	"DID/RaceTimeSplit";
@@ -84,8 +84,39 @@ string LineR4 =
 	"DID/NullProvider";
 #endif
 
+[SettingsTab name="Info to display"]
+void RenderSettingsInformation() {
+	LineL1 = laneSelectionDropdown(LineL1, "Top Left");
+	LineL2 = laneSelectionDropdown(LineL2, "Upper Mid Left");
+	LineL3 = laneSelectionDropdown(LineL3, "Lower Mid Left");
+	LineL4 = laneSelectionDropdown(LineL4, "Bottom Left");
+	UI::Separator();
+	LineR1 = laneSelectionDropdown(LineR1, "Top Right");
+	LineR2 = laneSelectionDropdown(LineR2, "Upper Mid Right");
+	LineR3 = laneSelectionDropdown(LineR3, "Lower Mid Right");
+	LineR4 = laneSelectionDropdown(LineR4, "Bottom Right");
+}
+
+string laneSelectionDropdown(const string &in current, const string &in label) {
+	if (UI::BeginCombo(label, friendlyDropdownName(DID::AddonHandler::getProvider(current).getProviderSetup()), UI::ComboFlags::None)) {
+		for (uint i = 0; i < DID::AddonHandler::laneProviders.Length; i++) {
+			DID::AddonHandler::LaneProvider@ lp = DID::AddonHandler::laneProviders[i];
+			if (UI::Selectable(friendlyDropdownName(lp.getProviderSetup()), lp.getProviderSetup().internalName == current)) {
+				UI::EndCombo();
+				return lp.getProviderSetup().internalName;
+			}
+		}
+		UI::EndCombo();
+	}
+	return current;
+}
+
+string friendlyDropdownName(DID::AddonHandler::LaneProviderSettings settings) {
+	return "\\$z" + settings.friendlyName + "\\$666 by " + settings.author + "\\$z";
+}
+
 [SettingsTab name="Help & Credits"]
-void RenderHelp()
+void RenderSettingsHelp()
 {
 	UI::TextWrapped("DID is currently in early development. If you encounter any issues or have a feature request, please reach out so that I can get it taken care of! :)");
 	
