@@ -40,6 +40,30 @@ uint deltaTimeDuration = 3000;
 [Setting category="Information" name="Delta-Time coloration" description="Color delta-times blue or red"]
 bool deltaTimeColors = true;
 
+[Setting category="Information" color name="Custom Color (L1)" description="Set alpha to 0 to use default text color."]
+vec4 CustomColorLineL1 = vec4(0,0,0,0);
+
+[Setting category="Information" color name="Custom Color (L2)" description="Set alpha to 0 to use default text color."]
+vec4 CustomColorLineL2 = vec4(0,0,0,0);
+
+[Setting category="Information" color name="Custom Color (L3)" description="Set alpha to 0 to use default text color."]
+vec4 CustomColorLineL3 = vec4(0,0,0,0);
+
+[Setting category="Information" color name="Custom Color (L4)" description="Set alpha to 0 to use default text color."]
+vec4 CustomColorLineL4 = vec4(0,0,0,0);
+
+[Setting category="Information" color name="Custom Color (R1)" description="Set alpha to 0 to use default text color."]
+vec4 CustomColorLineR1 = vec4(0,0,0,0);
+
+[Setting category="Information" color name="Custom Color (R2)" description="Set alpha to 0 to use default text color."]
+vec4 CustomColorLineR2 = vec4(0,0,0,0);
+
+[Setting category="Information" color name="Custom Color (R3)" description="Set alpha to 0 to use default text color."]
+vec4 CustomColorLineR3 = vec4(0,0,0,0);
+
+[Setting category="Information" color name="Custom Color (R4)" description="Set alpha to 0 to use default text color."]
+vec4 CustomColorLineR4 = vec4(0,0,0,0);
+
 [Setting category="Information" hidden]
 string LineL1 = "DID/NullProvider";
 

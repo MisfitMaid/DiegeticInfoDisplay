@@ -144,7 +144,7 @@ namespace DID {
 
     AddonHandler::LaneConfig@ getInfoText(const string &in type, uint slot) {
         AddonHandler::LaneConfig defaults();
-        defaults.color = diegeticColor;
+        defaults.color = getDefaultLaneColor(slot);
         defaults.content = "";
 
         if (renderDemo) {
@@ -162,6 +162,21 @@ namespace DID {
         }
         AddonHandler::NullProvider np;
         return np.getLaneConfig(defaults);
+    }
+
+    vec4 getDefaultLaneColor(uint slot) {
+        vec4 customSlotColor;
+        if (slot == 0) customSlotColor = CustomColorLineL1;
+        if (slot == 1) customSlotColor = CustomColorLineL2;
+        if (slot == 2) customSlotColor = CustomColorLineL3;
+        if (slot == 3) customSlotColor = CustomColorLineL4;
+        if (slot == 4) customSlotColor = CustomColorLineR1;
+        if (slot == 5) customSlotColor = CustomColorLineR2;
+        if (slot == 6) customSlotColor = CustomColorLineR3;
+        if (slot == 7) customSlotColor = CustomColorLineR4;
+
+        if (customSlotColor.w == 0.0) return diegeticColor;
+        return customSlotColor;
     }
 
     // from checkpoint counter
