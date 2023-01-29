@@ -40,13 +40,13 @@ namespace DID {
                     nvg::Stroke();
                     break;
                 case 4: // set bezier y1
-                    bez1 = points[i].yz;
+                    bez1 = vec2(points[i].y, points[i].z);
                     break;
                 case 5: // set bezier y2
-                    bez2 = points[i].yz;
+                    bez2 = vec2(points[i].y, points[i].z);
                     break;
                 case 6: // bezierTo
-                    nvgBezierTo(context, bez1, bez2, points[i].yz);
+                    nvgBezierTo(context, bez1, bez2, vec2(points[i].y, points[i].z));
                     break;
                 default: break;
             }
