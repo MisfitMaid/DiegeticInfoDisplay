@@ -36,7 +36,7 @@ namespace DID {
                 const MLFeed::PlayerCpInfo_V3@ plf = mlf.GetPlayer_V3(MLFeed::LocalPlayersName);
                 if (plf.spawnStatus == MLFeed::SpawnStatus::NotSpawned) return defaults;
 
-                if (plf.cpCount > 0 && (plf.CurrentRaceTime - plf.LastCpTime) < int(deltaTimeDuration) && plf.BestRaceTimes.Length > uint(plf.cpCount)) {
+                if (plf.cpCount > 0 && (plf.CurrentRaceTime - plf.LastCpTime) < int(deltaTimeDuration)) {
                     c.content = Time::Format(plf.lastCpTime);
                 } else {
                     c.content = (plf.CurrentRaceTime < 0) ? Time::Format(0) : Time::Format(plf.CurrentRaceTime);
