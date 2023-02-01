@@ -36,6 +36,7 @@ namespace DID {
     void Render() {
         if (!diegeticEnabled) return;
         if (VehicleState::GetViewingPlayer() is null) return;
+        if (VehicleState::GetVis(GetApp().GameScene, VehicleState::GetViewingPlayer()) is null) return;
 
         if (GetApp().Network.PlaygroundClientScriptAPI.IsInGameMenuDisplayed) return;
 
