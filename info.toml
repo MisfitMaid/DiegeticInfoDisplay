@@ -2,12 +2,12 @@
 name = "Diegetic Information Display"
 author = "MisfitMaid"
 category = "Overlay"
-version = "0.2.1"
+version = "0.2.2"
 siteid = 311
 
 [script]
 dependencies = ["Camera", "VehicleState"]
 optional_dependencies = ["MLHook", "MLFeedRaceData"]
-exports = [ "Export.as" ]
-shared_exports = [ "ExportShared.as" ]
+exports = [ "DID_Export.as" ]
+shared_exports = [ "DID_ExportShared.as" ]
 module = "DID"
