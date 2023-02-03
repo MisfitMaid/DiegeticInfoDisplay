@@ -128,7 +128,13 @@ void RenderSettingsInformation() {
 }
 
 string laneSelectionDropdown(const string &in current, const string &in label) {
-	if (UI::BeginCombo(label, friendlyDropdownName(DID::getProvider(current).getProviderSetup()), UI::ComboFlags::None)) {
+	string currentLabel;
+	try {
+		currentLabel = friendlyDropdownName(DID::getProvider(current).getProviderSetup());
+	} catch {
+		currentLabel = "";
+	}
+	if (UI::BeginCombo(label, currentLabel, UI::ComboFlags::None)) {
 		for (uint i = 0; i < DID::laneProviders.Length; i++) {
 			DID::LaneProvider@ lp = DID::laneProviders[i];
 			if (UI::Selectable(friendlyDropdownName(lp.getProviderSetup()), lp.getProviderSetup().internalName == current)) {
