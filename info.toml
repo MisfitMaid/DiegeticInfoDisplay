@@ -7,7 +7,7 @@ siteid = 311
 
 [script]
 dependencies = ["Camera", "VehicleState"]
-optional_dependencies = ["MLHook", "MLFeedRaceData"]
+optional_dependencies = ["MLHook", "MLFeedRaceData", "SplitSpeeds"]
 exports = [ "DID_Export.as" ]
 shared_exports = [ "DID_ExportShared.as" ]
 module = "DID"
