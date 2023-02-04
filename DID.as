@@ -133,6 +133,12 @@ namespace DID {
         registerLaneProviderAddon(CurrenCheckpointHandler());
 #endif
 
+
+#if DEPENDENCY_SPLITSPEEDS
+	DID::registerLaneProviderAddon(SplitSpeedsDiffProvider());
+	DID::registerLaneProviderAddon(SplitSpeedsSpeedProvider());
+#endif
+
     // fill all our slots with empty info to prevent NPE on first frame running
     for (uint i = 0; i < 8; i++) {
         @lanes[i] = getInfoText("DID/NullProvider", i);
