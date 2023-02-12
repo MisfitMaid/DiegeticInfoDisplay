@@ -93,7 +93,7 @@ namespace DID {
             auto app = cast<CTrackMania>(GetApp());
             auto map = app.RootMap;
 
-            if(map is null || map.MapInfo.MapUid == "" || app.Editor !is null || VehicleState::GetViewingPlayer() is null) {
+            if(map is null || map.MapInfo.MapUid == "" || VehicleState::GetViewingPlayer() is null) {
                 yield();
             } else {
                 step();
