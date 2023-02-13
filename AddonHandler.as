@@ -38,4 +38,8 @@ namespace DID {
             NullProvider thisShouldntEverHappenButItWontCompile;
             return thisShouldntEverHappenButItWontCompile;
         }
+
+        LaneProvider@[]@ getAllProviders() {
+            return laneProviders;
+        }
 }
