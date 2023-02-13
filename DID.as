@@ -240,6 +240,9 @@ namespace DID {
             case Fonts::Custom:
                 json = Json::FromFile(IO::FromStorageFolder("font.custom.json"));
                 break;
+            case Fonts::SevenSegment:
+                json = Json::FromFile("font.sevenSegment.json");
+                break;
             case Fonts::NixieReduced:
                 json = Json::FromFile("font.shittyNixie.json");
                 break;
@@ -261,6 +264,7 @@ namespace DID {
     enum Fonts {
         Nixie,
         NixieReduced,
+        SevenSegment,
         Custom
     }
 }
