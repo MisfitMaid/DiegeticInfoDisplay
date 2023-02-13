@@ -3,7 +3,7 @@ namespace DID {
     // handles all of our transforms to screen space from car space
 
     class TypesetContext {
-        // svg2nbg calls have a context object, to enable the laziest copy-pasting
+        // svg2nvg calls have a context object, to enable the laziest copy-pasting
         // possible we'll just use that to pass data
 
         float scale;
@@ -11,48 +11,50 @@ namespace DID {
         float z;
     }
 
-    void nvgLineTo(TypesetContext context, float x, float y) {
-        if (!isBehind(context, x, y)) nvg::LineTo(nvgTrans(context, x, y));
+    bool nvgLineTo(TypesetContext context, float x, float y) {
+        vec3 line = nvgTrans(context, x, y);
+        if (line.z < 0) {
+            nvg::LineTo(line.xy);
+            return true;
+        }
+        return false;
     }
 
-    void nvgMoveTo(TypesetContext context, float x, float y) {
-        if (!isBehind(context, x, y)) nvg::MoveTo(nvgTrans(context, x, y));
+    bool nvgMoveTo(TypesetContext context, float x, float y) {
+        vec3 line = nvgTrans(context, x, y);
+        if (line.z < 0) {
+            nvg::MoveTo(line.xy);
+            return true;
+        }
+        return false;
     }
 
-    void nvgBezierTo(TypesetContext context, vec2 c1, vec2 c2, vec2 dest) {
-        if (isBehind(context, c1.x, c1.y)) return;
-        if (isBehind(context, c2.x, c2.y)) return;
-        if (isBehind(context, dest.x, dest.y)) return;
+    bool nvgBezierTo(TypesetContext context, vec2 c1, vec2 c2, vec2 dest) {
+        vec3 c1_3 = nvgTrans(context, c1);
+        vec3 c2_3 = nvgTrans(context, c2);
+        vec3 d_3 = nvgTrans(context, dest);
 
-        nvg::BezierTo(nvgTrans(context, c1.x, c1.y), nvgTrans(context, c2.x, c2.y), nvgTrans(context, dest.x, dest.y));
+        if (c1_3.z < 0 && c2_3.z < 0 && d_3.z < 0) {
+            nvg::BezierTo(c1_3.xy, c2_3.xy, d_3.xy);
+            return true;
+        }
+        return false;
     }
 
-    vec2 nvgTrans(TypesetContext context, float x, float y) {
-        vec2 ws = (vec2(x,y)+context.offset)*context.scale*0.001*diegeticScale;
-        return Camera::ToScreenSpace(projectHatSpace(vec3(ws.x*-1.0, ws.y*-1.0, context.z)));
+    vec3 nvgTrans(TypesetContext context, float x, float y) {
+        return nvgTrans(context, vec2(x, y));
     }
 
-    bool isBehind(TypesetContext context, float x, float y) {
-        vec2 ws = (vec2(x,y)+context.offset)*context.scale*0.001*diegeticScale;
-        return Camera::IsBehind(projectHatSpace(vec3(ws.x*-1.0, ws.y*-1.0, context.z)));
-    }
-
-    // stolen from hats mod
-    vec3 offsetHatPoint(vec3 point) {
-        auto visState = VehicleState::GetVis(GetApp().GameScene, VehicleState::GetViewingPlayer()).AsyncState;
-        point += visState.Dir;
-        point += visState.Up;
-        return point;
+    vec3 nvgTrans(TypesetContext context, vec2 coords) {
+        vec2 ws = (coords+context.offset)*context.scale;
+        return Camera::ToScreen(projectHatSpace(vec3(ws, context.z)));
     }
 
     // stolen from hats mod
     vec3 projectHatSpace(vec3 point) {
         auto visState = VehicleState::GetVis(GetApp().GameScene, VehicleState::GetViewingPlayer()).AsyncState;
-        return offsetHatPoint(visState.Position + (visState.Left * point.x) + (visState.Up * point.y) + (visState.Dir * point.z));
-    }
-
-    vec3 projectHatSpace(vec2 point) {
-        return projectHatSpace(vec3(point.x, point.y, 0));
+        vec3 localPos = vec3(visState.Left.x, visState.Up.y, visState.Dir.z) * point;
+        return visState.Position + localPos + visState.Dir + visState.Up;
     }
 }
 

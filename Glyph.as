@@ -16,25 +16,25 @@ namespace DID {
 
     }
 
-    // todo: port funcs over to this with an array instead
     void drawGlyph(vec3[] points, const vec2 &in start, float z) {
         TypesetContext context;
-        context.scale = 1;
+        context.scale = -0.001*diegeticScale;
         context.offset = start;
         context.z = z;
 
         vec2 bez1, bez2;
 
         for (uint i = 0; i < points.Length; i++) {
+            bool didRender = true;
             switch(int(points[i].x)) {
                 case 0: // begin path
                     nvg::BeginPath();
                     break;
                 case 1: // moveTo
-                    nvgMoveTo(context, points[i].y,points[i].z);
+                    didRender = nvgMoveTo(context, points[i].y,points[i].z);
                     break;
                 case 2: // lineTo
-                    nvgLineTo(context, points[i].y,points[i].z);
+                    didRender = nvgLineTo(context, points[i].y,points[i].z);
                     break;
                 case 3: // stroke
                     nvg::Stroke();
@@ -46,10 +46,11 @@ namespace DID {
                     bez2 = vec2(points[i].y, points[i].z);
                     break;
                 case 6: // bezierTo
-                    nvgBezierTo(context, bez1, bez2, vec2(points[i].y, points[i].z));
+                    didRender = nvgBezierTo(context, bez1, bez2, vec2(points[i].y, points[i].z));
                     break;
                 default: break;
             }
+            if (!didRender) return;
         }
     }
 }
