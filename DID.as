@@ -259,7 +259,10 @@ namespace DID {
     vec3[][] fontGlyphs = array<array<vec3>>(256);
     // vec3[] emptyGlyph;
     const vec3[]@ GetFontGlyph(uint8 char) {
-        return fontGlyphs[char];
+        auto ret = fontGlyphs[char];
+        if (char == 0x20 || ret.Length > 0) return ret;
+        throw('No glyph for char: ' + char);
+        return {};
     }
 
     void loadFont() {
