@@ -1,0 +1,26 @@
+name: 'Create .op artifact'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  generate-op:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create .op zip
+      uses: thedoctor0/zip-release@0.7.1
+      with:
+        type: 'zip'
+        filename: 'DID.op'
+        exclusions: '*.git* /misc/*'
+    - name: Upload as artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        path: DID.op
