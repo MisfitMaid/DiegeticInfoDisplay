@@ -93,7 +93,6 @@ namespace DID {
     dictionary font;
 
 
-
     void Main() {
         OnSettingsChanged();
         while (true) {
@@ -154,6 +153,10 @@ namespace DID {
 
     }
 
+    // Currently, this takes about 0.3ms for me which is approx 1/3 of total execution time with a basic DID layout.
+    // This is most likely due to bad memory reuse.
+    // Suggestion: add a `.Update` method to `LaneConfig` that can copy values from an update source.
+    // Recreating the objects each frame is SLOOOOOOOW
     void SetLaneProvidersFromSettings() {
         @lanes[0] = getInfoText(LineL1, 0);
         @lanes[1] = getInfoText(LineL2, 1);
