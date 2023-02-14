@@ -6,24 +6,14 @@ namespace DID {
             auto char = str[i];
             // skip space
             if (char == 0x20) continue;
-            string l = str.SubStr(i, 1);
             vec2 offset = start + vec2(i*diegeticLetterSpacing, 0);
-            // if (l == " ") continue; // space
-
-            // if (font.Exists(l)) {
-            //     dictionaryValue dv = font[l];
-            //     drawGlyph(cast<vec3[]>(dv), offset, z);
-            // } else {
-            //     warn("no glyph for char "+l);
-            // }
-
-            // All unit8s have an array associated with it
+            // All unit8s have an array associated with it (even if empty)
             drawGlyph(GetFontGlyph(char), offset, z);
         }
 
     }
 
-    // just one object is fine thx. saves .1ms mb
+    // just one object is fine. saves .1ms mb
     TypesetContext _context;
 
     // saves 0.02 mb

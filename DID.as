@@ -59,17 +59,11 @@ namespace DID {
         // copying to leftPadded is cheap enough to be negligiable performance wise
         for (uint i = 0; i < 4; i++) {
             leftPadded[i] = LOOOOOOOONG.SubStr(0, maxLen - lanes[i].content.Length) + lanes[i].content;
-            // while (leftPadded[i].Length < maxLen) {
-            //     leftPadded[i] = " "+leftPadded[i]; // str_pad when 🥺
-            // }
         }
 
         int leftOffset = (diegeticHorizontalDistance + maxLen*100) * -1;
         int rightOffset = diegeticHorizontalDistance;
         for (uint i = 0; i < 4; i++) {
-            // LaneConfig@ left = lanes[i];
-            // LaneConfig@ right = lanes[i+4];
-
             if (diegeticOutline.w > 0.0) {
                 nvg::StrokeColor(diegeticOutline);
                 nvg::LineCap(nvg::LineCapType::Round);
@@ -93,7 +87,7 @@ namespace DID {
 
 
     void Main() {
-        OnSettingsChanged();
+        init();
         while (true) {
             auto app = cast<CTrackMania>(GetApp());
             auto map = app.RootMap;
@@ -109,7 +103,6 @@ namespace DID {
 
     void OnSettingsChanged() {
         init();
-        SetLaneProvidersFromSettings();
     }
 
     void init() {
@@ -141,15 +134,16 @@ namespace DID {
 
 
 #if DEPENDENCY_SPLITSPEEDS
-	DID::registerLaneProviderAddon(SplitSpeedsDiffProvider());
-	DID::registerLaneProviderAddon(SplitSpeedsSpeedProvider());
+        DID::registerLaneProviderAddon(SplitSpeedsDiffProvider());
+        DID::registerLaneProviderAddon(SplitSpeedsSpeedProvider());
 #endif
 
-    // fill all our slots with empty info to prevent NPE on first frame running
-    for (uint i = 0; i < 8; i++) {
-        @lanes[i] = getInfoText("DID/NullProvider", i);
-    }
+        // fill all our slots with empty info to prevent NPE on first frame running
+        for (uint i = 0; i < 8; i++) {
+            @lanes[i] = getInfoText("DID/NullProvider", i);
+        }
 
+        SetLaneProvidersFromSettings();
     }
 
     // Currently, this takes about 0.3ms for me which is approx 1/3 of total execution time with a basic DID layout.
@@ -249,15 +243,12 @@ namespace DID {
 
     dictionary font;
     /**
-     * Only chars supported: [0-9+-.:/]
+     * Only chars included currently: [0-9+-.:/]
      * ascii: 0x30-39 for 0-9
-     * 0x2b for +, then ,-./
-     * 0x3a for :
+     * 0x2b for `+`, then `,-./` in order
+     * 0x3a for `:`
      */
-    // int fontCharOffset = 0x2b;
-    // int fontCharMax = 0x3a;
     vec3[][] fontGlyphs = array<array<vec3>>(256);
-    // vec3[] emptyGlyph;
     const vec3[]@ GetFontGlyph(uint8 char) {
         auto ret = fontGlyphs[char];
         if (char == 0x20 || ret.Length > 0) return ret;

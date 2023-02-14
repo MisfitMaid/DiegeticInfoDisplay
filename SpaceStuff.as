@@ -8,13 +8,6 @@ namespace DID {
         @vis = _vis;
     }
 
-    // EXPENSIVE!!!!!!!!
-    // CSceneVehicleVis@ vis {
-    //     get {
-    //         return VehicleState::GetVis(GetApp().GameScene, VehicleState::GetViewingPlayer());
-    //     }
-    // }
-
     class TypesetContext {
         // svg2nvg calls have a context object, to enable the laziest copy-pasting
         // possible we'll just use that to pass data
@@ -53,10 +46,6 @@ namespace DID {
         if (d_3.z >= 0) return false;
         nvg::BezierTo(c1_3.xy, c2_3.xy, d_3.xy);
         return true;
-
-        // if (c1_3.z < 0 && c2_3.z < 0 && d_3.z < 0) {
-        // }
-        // return false;
     }
 
     vec3 nvgTrans(TypesetContext@ context, float x, float y) {
@@ -70,8 +59,6 @@ namespace DID {
 
     // stolen from hats mod
     vec3 projectHatSpace(const vec3 &in point) {
-        vec3 localPos = (vis.AsyncState.Left * point.x) + (vis.AsyncState.Up * (point.y + 1.)) + (vis.AsyncState.Dir * (point.z + 1.));
-        // auto l = vis.AsyncState.Left, u = vis.AsyncState.Up, d = vis.AsyncState.Dir;
-        return vis.AsyncState.Position + localPos;
+        return vis.AsyncState.Position + (vis.AsyncState.Left * point.x) + (vis.AsyncState.Up * (point.y + 1.)) + (vis.AsyncState.Dir * (point.z + 1.));
     }
 }
