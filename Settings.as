@@ -74,7 +74,7 @@ string LineL1 = "DID/NullProvider";
 string LineL2 = "DID/NullProvider";
 
 [Setting category="Information" hidden]
-string LineL3 = 
+string LineL3 =
 #if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
 	"DID/CurrentLap";
 #else
@@ -82,7 +82,7 @@ string LineL3 =
 #endif
 
 [Setting category="Information" hidden]
-string LineL4 = 
+string LineL4 =
 #if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
 	"DID/CurrentCheckpoint";
 #else
@@ -90,13 +90,23 @@ string LineL4 =
 #endif
 
 [Setting category="Information" hidden]
-string LineR1 = "DID/NullProvider";
+string LineR1 =
+#if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
+	"DID/NoRespawnSplits";
+#else
+	"DID/NullProvider";
+#endif
 
 [Setting category="Information" hidden]
-string LineR2 = "DID/NullProvider";
+string LineR2 =
+#if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
+	"DID/NoRespawnTime";
+#else
+	"DID/NullProvider";
+#endif
 
 [Setting category="Information" hidden]
-string LineR3 = 
+string LineR3 =
 #if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
 	"DID/SplitDelta";
 #else
@@ -104,7 +114,7 @@ string LineR3 =
 #endif
 
 [Setting category="Information" hidden]
-string LineR4 = 
+string LineR4 =
 #if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
 	"DID/RaceTimeSplit";
 #else
@@ -155,11 +165,11 @@ string friendlyDropdownName(DID::LaneProviderSettings settings) {
 void RenderSettingsHelp()
 {
 	UI::TextWrapped("DID is currently in early development. If you encounter any issues or have a feature request, please reach out so that I can get it taken care of! :)");
-	
+
 	UI::Separator();
-	
+
 	UI::TextWrapped("If you are interested in supporting this project or just want to say hi, please consider taking a look at the below links "+Icons::Heart);
-	
+
 	UI::Markdown(Icons::Patreon + " [https://patreon.com/MisfitMaid](https://patreon.com/MisfitMaid)");
 	UI::Markdown(Icons::Paypal + " [https://paypal.me/MisfitMaid](https://paypal.me/MisfitMaid)");
 	UI::Markdown(Icons::Github + " [https://github.com/sylae/DiegeticInfoDisplay](https://github.com/sylae/DiegeticInfoDisplay)");
