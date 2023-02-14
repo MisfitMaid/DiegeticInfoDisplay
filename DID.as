@@ -35,10 +35,14 @@ void OnSettingsChanged() {
 namespace DID {
     void Render() {
         if (!diegeticEnabled) return;
-        if (VehicleState::GetViewingPlayer() is null) return;
-        if (VehicleState::GetVis(GetApp().GameScene, VehicleState::GetViewingPlayer()) is null) return;
+        auto vp = VehicleState::GetViewingPlayer();
+        if (vp is null) return;
+        auto vis = VehicleState::GetVis(GetApp().GameScene, vp);
+        if (vis is null) return;
 
         if (GetApp().Network.PlaygroundClientScriptAPI.IsInGameMenuDisplayed) return;
+
+        DID::ResetDrawState(vis);
 
         nvg::StrokeWidth(diegeticStrokeWidth);
         nvg::LineCap(nvg::LineCapType::Butt);
@@ -52,20 +56,15 @@ namespace DID {
         for (uint i = 0; i < 4; i++) {
             maxLen = Math::Max(lanes[i].content.Length, maxLen);
         }
+        // copying to leftPadded is cheap enough to be negligiable performance wise
         for (uint i = 0; i < 4; i++) {
-            leftPadded[i] = lanes[i].content;
-            while (leftPadded[i].Length < maxLen) {
-                leftPadded[i] = " "+leftPadded[i]; // str_pad when 🥺
-            }
+            leftPadded[i] = LOOOOOOOONG.SubStr(0, maxLen - lanes[i].content.Length) + lanes[i].content;
         }
 
         int leftOffset = (diegeticHorizontalDistance + maxLen*100) * -1;
         int rightOffset = diegeticHorizontalDistance;
         for (uint i = 0; i < 4; i++) {
-            LaneConfig@ left = lanes[i];
-            LaneConfig@ right = lanes[i+4];
-
-            if (diegeticOutline.w > 0.0) {    
+            if (diegeticOutline.w > 0.0) {
                 nvg::StrokeColor(diegeticOutline);
                 nvg::LineCap(nvg::LineCapType::Round);
                 nvg::LineJoin(nvg::LineCapType::Round);
@@ -81,11 +80,11 @@ namespace DID {
             DID::drawString(leftPadded[i], vec2(leftOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
             nvg::StrokeColor(lanes[i+4].color);
             DID::drawString(lanes[i+4].content, vec2(rightOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
-        }    
+        }
     }
 
     DID::LaneConfig@[] lanes;
-    dictionary font;
+
 
     void Main() {
         init();
@@ -135,21 +134,23 @@ namespace DID {
 
 
 #if DEPENDENCY_SPLITSPEEDS
-	DID::registerLaneProviderAddon(SplitSpeedsDiffProvider());
-	DID::registerLaneProviderAddon(SplitSpeedsSpeedProvider());
+        DID::registerLaneProviderAddon(SplitSpeedsDiffProvider());
+        DID::registerLaneProviderAddon(SplitSpeedsSpeedProvider());
 #endif
 
-    // fill all our slots with empty info to prevent NPE on first frame running
-    for (uint i = 0; i < 8; i++) {
-        @lanes[i] = getInfoText("DID/NullProvider", i);
-    }
-        
+        // fill all our slots with empty info to prevent NPE on first frame running
+        for (uint i = 0; i < 8; i++) {
+            @lanes[i] = getInfoText("DID/NullProvider", i);
+        }
+
+        SetLaneProvidersFromSettings();
     }
 
-    void step() {
-        if (!diegeticEnabled) return;
-        // this is kinda dumb but whatever
-
+    // Currently, this takes about 0.3ms for me which is approx 1/3 of total execution time with a basic DID layout.
+    // This is most likely due to bad memory reuse.
+    // Suggestion: add a `.Update` method to `LaneConfig` that can copy values from an update source.
+    // Recreating the objects each frame is SLOOOOOOOW
+    void SetLaneProvidersFromSettings() {
         @lanes[0] = getInfoText(LineL1, 0);
         @lanes[1] = getInfoText(LineL2, 1);
         @lanes[2] = getInfoText(LineL3, 2);
@@ -159,14 +160,19 @@ namespace DID {
         @lanes[5] = getInfoText(LineR2, 5);
         @lanes[6] = getInfoText(LineR3, 6);
         @lanes[7] = getInfoText(LineR4, 7);
+    }
 
+    void step() {
+        if (!diegeticEnabled) return;
+        // this is kinda dumb but whatever
+        SetLaneProvidersFromSettings();
         return;
     }
 
+    // using one instance of this only saves 0.05ms
+    LaneConfig defaults();
     LaneConfig@ getInfoText(const string &in type, uint slot) {
-        LaneConfig defaults();
         defaults.color = getDefaultLaneColor(slot);
-        defaults.content = "";
 
         if (renderDemo) {
             DemoProvider dp;
@@ -234,6 +240,22 @@ namespace DID {
         return _maxCP;
     }
 
+
+    dictionary font;
+    /**
+     * Only chars included currently: [0-9+-.:/]
+     * ascii: 0x30-39 for 0-9
+     * 0x2b for `+`, then `,-./` in order
+     * 0x3a for `:`
+     */
+    vec3[][] fontGlyphs = array<array<vec3>>(256);
+    const vec3[]@ GetFontGlyph(uint8 char) {
+        auto ret = fontGlyphs[char];
+        if (char == 0x20 || ret.Length > 0) return ret;
+        throw('No glyph for char: ' + char);
+        return {};
+    }
+
     void loadFont() {
         Json::Value json;
         switch (diegeticFont) {
@@ -256,6 +278,12 @@ namespace DID {
             vec3[] pts;
             for (uint v = 0; v < json[glyph].Length; v++) {
                 pts.InsertLast(vec3(json[glyph][v][0],json[glyph][v][1],json[glyph][v][2]));
+            }
+            auto char = glyph[0];
+            auto gIx = int(char); // - fontCharOffset;
+            fontGlyphs[gIx].Resize(pts.Length);
+            for (uint v = 0; v < pts.Length; v++) {
+                fontGlyphs[gIx][v] = pts[v];
             }
             font.Set(glyph, pts);
         }
