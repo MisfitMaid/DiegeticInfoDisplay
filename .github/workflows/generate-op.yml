@@ -14,10 +14,13 @@ jobs:
   generate-op:
     runs-on: ubuntu-latest
     steps:
-    - name: Create .op zip
-      run: |
-        7z a -tzip DID.op *.as info.toml *.json LICENSE
+    - uses: actions/checkout@v3
+
     - name: Upload as artifact
       uses: actions/upload-artifact@v3.1.2
       with:
-        path: DID.op
+        path: | 
+          *.as
+          info.toml
+          *.json
+          LICENSE
