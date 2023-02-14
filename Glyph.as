@@ -1,4 +1,5 @@
 namespace DID {
+    const string LOOOOOOOOOOOOOOONG = "                         ";
 
     void drawString(const string &in str, const vec2 &in start, const float &in z) {
         for (int i = 0; i < str.Length; i++) {
@@ -16,11 +17,15 @@ namespace DID {
 
     }
 
-    void drawGlyph(vec3[] points, const vec2 &in start, float z) {
-        TypesetContext context;
-        context.scale = -0.001*diegeticScale;
-        context.offset = start;
-        context.z = z;
+    // just one object is fine thx. saves .1ms mb
+    TypesetContext _context;
+
+    // saves 0.02 mb
+    // void drawGlyph(const vec3[] &in points, const vec2 &in start, float z) {
+    void drawGlyph(const vec3[] &in points, const vec2 &in start, float z) {
+        _context.scale = -0.001*diegeticScale;
+        _context.offset = start;
+        _context.z = z;
 
         vec2 bez1, bez2;
 
@@ -31,10 +36,10 @@ namespace DID {
                     nvg::BeginPath();
                     break;
                 case 1: // moveTo
-                    didRender = nvgMoveTo(context, points[i].y,points[i].z);
+                    didRender = nvgMoveTo(_context, points[i].y,points[i].z);
                     break;
                 case 2: // lineTo
-                    didRender = nvgLineTo(context, points[i].y,points[i].z);
+                    didRender = nvgLineTo(_context, points[i].y,points[i].z);
                     break;
                 case 3: // stroke
                     nvg::Stroke();
@@ -46,7 +51,7 @@ namespace DID {
                     bez2 = vec2(points[i].y, points[i].z);
                     break;
                 case 6: // bezierTo
-                    didRender = nvgBezierTo(context, bez1, bez2, vec2(points[i].y, points[i].z));
+                    didRender = nvgBezierTo(_context, bez1, bez2, vec2(points[i].y, points[i].z));
                     break;
                 default: break;
             }

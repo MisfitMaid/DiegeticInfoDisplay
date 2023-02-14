@@ -1,6 +1,19 @@
 namespace DID {
-    
+
     // handles all of our transforms to screen space from car space
+
+    // caching this saves 50% draw time in demo mode
+    CSceneVehicleVis@ vis = null;
+    void ResetDrawState(CSceneVehicleVis@ _vis) {
+        @vis = _vis;
+    }
+
+    // EXPENSIVE!!!!!!!!
+    // CSceneVehicleVis@ vis {
+    //     get {
+    //         return VehicleState::GetVis(GetApp().GameScene, VehicleState::GetViewingPlayer());
+    //     }
+    // }
 
     class TypesetContext {
         // svg2nvg calls have a context object, to enable the laziest copy-pasting
@@ -11,7 +24,8 @@ namespace DID {
         float z;
     }
 
-    bool nvgLineTo(TypesetContext context, float x, float y) {
+    // Passing handles here saves 0.5 ms per frame
+    bool nvgLineTo(TypesetContext@ context, float x, float y) {
         vec3 line = nvgTrans(context, x, y);
         if (line.z < 0) {
             nvg::LineTo(line.xy);
@@ -20,7 +34,7 @@ namespace DID {
         return false;
     }
 
-    bool nvgMoveTo(TypesetContext context, float x, float y) {
+    bool nvgMoveTo(TypesetContext@ context, float x, float y) {
         vec3 line = nvgTrans(context, x, y);
         if (line.z < 0) {
             nvg::MoveTo(line.xy);
@@ -29,32 +43,35 @@ namespace DID {
         return false;
     }
 
-    bool nvgBezierTo(TypesetContext context, vec2 c1, vec2 c2, vec2 dest) {
+    // const &in for all vecs and arrays of vecs saves .5ms
+    bool nvgBezierTo(TypesetContext@ context, const vec2 &in c1, const vec2 &in c2, const vec2 &in dest) {
         vec3 c1_3 = nvgTrans(context, c1);
+        if (c1_3.z >= 0) return false;
         vec3 c2_3 = nvgTrans(context, c2);
+        if (c2_3.z >= 0) return false;
         vec3 d_3 = nvgTrans(context, dest);
+        if (d_3.z >= 0) return false;
+        nvg::BezierTo(c1_3.xy, c2_3.xy, d_3.xy);
+        return true;
 
-        if (c1_3.z < 0 && c2_3.z < 0 && d_3.z < 0) {
-            nvg::BezierTo(c1_3.xy, c2_3.xy, d_3.xy);
-            return true;
-        }
-        return false;
+        // if (c1_3.z < 0 && c2_3.z < 0 && d_3.z < 0) {
+        // }
+        // return false;
     }
 
-    vec3 nvgTrans(TypesetContext context, float x, float y) {
+    vec3 nvgTrans(TypesetContext@ context, float x, float y) {
         return nvgTrans(context, vec2(x, y));
     }
 
-    vec3 nvgTrans(TypesetContext context, vec2 coords) {
+    vec3 nvgTrans(TypesetContext@ context, const vec2 &in coords) {
         vec2 ws = (coords+context.offset)*context.scale;
         return Camera::ToScreen(projectHatSpace(vec3(ws, context.z)));
     }
 
     // stolen from hats mod
-    vec3 projectHatSpace(vec3 point) {
-        auto visState = VehicleState::GetVis(GetApp().GameScene, VehicleState::GetViewingPlayer()).AsyncState;
-        vec3 localPos = vec3(visState.Left.x, visState.Up.y, visState.Dir.z) * point;
-        return visState.Position + localPos + visState.Dir + visState.Up;
+    vec3 projectHatSpace(const vec3 &in point) {
+        vec3 localPos = (vis.AsyncState.Left * point.x) + (vis.AsyncState.Up * (point.y + 1.)) + (vis.AsyncState.Dir * (point.z + 1.));
+        // auto l = vis.AsyncState.Left, u = vis.AsyncState.Up, d = vis.AsyncState.Dir;
+        return vis.AsyncState.Position + localPos;
     }
 }
-

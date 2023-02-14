@@ -35,10 +35,14 @@ void OnSettingsChanged() {
 namespace DID {
     void Render() {
         if (!diegeticEnabled) return;
-        if (VehicleState::GetViewingPlayer() is null) return;
-        if (VehicleState::GetVis(GetApp().GameScene, VehicleState::GetViewingPlayer()) is null) return;
+        auto vp = VehicleState::GetViewingPlayer();
+        if (vp is null) return;
+        auto vis = VehicleState::GetVis(GetApp().GameScene, vp);
+        if (vis is null) return;
 
         if (GetApp().Network.PlaygroundClientScriptAPI.IsInGameMenuDisplayed) return;
+
+        DID::ResetDrawState(vis);
 
         nvg::StrokeWidth(diegeticStrokeWidth);
         nvg::LineCap(nvg::LineCapType::Butt);
@@ -65,7 +69,7 @@ namespace DID {
             LaneConfig@ left = lanes[i];
             LaneConfig@ right = lanes[i+4];
 
-            if (diegeticOutline.w > 0.0) {    
+            if (diegeticOutline.w > 0.0) {
                 nvg::StrokeColor(diegeticOutline);
                 nvg::LineCap(nvg::LineCapType::Round);
                 nvg::LineJoin(nvg::LineCapType::Round);
@@ -81,7 +85,7 @@ namespace DID {
             DID::drawString(leftPadded[i], vec2(leftOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
             nvg::StrokeColor(lanes[i+4].color);
             DID::drawString(lanes[i+4].content, vec2(rightOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
-        }    
+        }
     }
 
     DID::LaneConfig@[] lanes;
@@ -143,7 +147,7 @@ namespace DID {
     for (uint i = 0; i < 8; i++) {
         @lanes[i] = getInfoText("DID/NullProvider", i);
     }
-        
+
     }
 
     void step() {
@@ -163,6 +167,7 @@ namespace DID {
         return;
     }
 
+    // using one instance of this only saves 0.05ms
     LaneConfig@ getInfoText(const string &in type, uint slot) {
         LaneConfig defaults();
         defaults.color = getDefaultLaneColor(slot);
