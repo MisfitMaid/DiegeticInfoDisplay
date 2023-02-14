@@ -3,15 +3,25 @@ namespace DID {
 
     void drawString(const string &in str, const vec2 &in start, const float &in z) {
         for (int i = 0; i < str.Length; i++) {
+            auto char = str[i];
+            // skip space
+            if (char == 0x20) continue;
             string l = str.SubStr(i, 1);
             vec2 offset = start + vec2(i*diegeticLetterSpacing, 0);
-            if (l == " ") continue; // space
+            // if (l == " ") continue; // space
 
-            if (font.Exists(l)) {
-                dictionaryValue dv = font[l];
-                drawGlyph(cast<vec3[]>(dv), offset, z);
+            // if (font.Exists(l)) {
+            //     dictionaryValue dv = font[l];
+            //     drawGlyph(cast<vec3[]>(dv), offset, z);
+            // } else {
+            //     warn("no glyph for char "+l);
+            // }
+
+            // this is about
+            if (int(char) < fontCharOffset || int(char) > fontCharMax) {
+                warn("No glyph for char: " + char);
             } else {
-                warn("no glyph for char "+l);
+                drawGlyph(GetFontGlyph(char), offset, z);
             }
         }
 

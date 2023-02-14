@@ -90,7 +90,6 @@ namespace DID {
     }
 
     DID::LaneConfig@[] lanes;
-    dictionary font;
 
 
     void Main() {
@@ -247,6 +246,24 @@ namespace DID {
         return _maxCP;
     }
 
+
+    dictionary font;
+    /**
+     * Only chars supported: [0-9+-.:/]
+     * ascii: 0x30-39 for 0-9
+     * 0x2b for +, then ,-./
+     * 0x3a for :
+     */
+    int fontCharOffset = 0x2b;
+    int fontCharMax = 0x3a;
+    vec3[][] fontGlyphs = array<array<vec3>>(fontCharMax - fontCharOffset + 1);
+    vec3[] emptyGlyph;
+    const vec3[]@ GetFontGlyph(uint8 char) {
+        if (int(char) < fontCharOffset) return emptyGlyph;
+        if (char > 0x3a) return emptyGlyph;
+        return fontGlyphs[char - fontCharOffset];
+    }
+
     void loadFont() {
         Json::Value json;
         switch (diegeticFont) {
@@ -269,6 +286,12 @@ namespace DID {
             vec3[] pts;
             for (uint v = 0; v < json[glyph].Length; v++) {
                 pts.InsertLast(vec3(json[glyph][v][0],json[glyph][v][1],json[glyph][v][2]));
+            }
+            auto char = glyph[0];
+            auto gIx = int(char) - fontCharOffset;
+            fontGlyphs[gIx].Resize(pts.Length);
+            for (uint v = 0; v < pts.Length; v++) {
+                fontGlyphs[gIx][v] = pts[v];
             }
             font.Set(glyph, pts);
         }
