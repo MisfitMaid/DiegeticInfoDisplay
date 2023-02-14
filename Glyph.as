@@ -17,12 +17,8 @@ namespace DID {
             //     warn("no glyph for char "+l);
             // }
 
-            // this is about
-            if (int(char) < fontCharOffset || int(char) > fontCharMax) {
-                warn("No glyph for char: " + char);
-            } else {
-                drawGlyph(GetFontGlyph(char), offset, z);
-            }
+            // All unit8s have an array associated with it
+            drawGlyph(GetFontGlyph(char), offset, z);
         }
 
     }

@@ -254,14 +254,12 @@ namespace DID {
      * 0x2b for +, then ,-./
      * 0x3a for :
      */
-    int fontCharOffset = 0x2b;
-    int fontCharMax = 0x3a;
-    vec3[][] fontGlyphs = array<array<vec3>>(fontCharMax - fontCharOffset + 1);
-    vec3[] emptyGlyph;
+    // int fontCharOffset = 0x2b;
+    // int fontCharMax = 0x3a;
+    vec3[][] fontGlyphs = array<array<vec3>>(256);
+    // vec3[] emptyGlyph;
     const vec3[]@ GetFontGlyph(uint8 char) {
-        if (int(char) < fontCharOffset) return emptyGlyph;
-        if (char > 0x3a) return emptyGlyph;
-        return fontGlyphs[char - fontCharOffset];
+        return fontGlyphs[char];
     }
 
     void loadFont() {
@@ -288,7 +286,7 @@ namespace DID {
                 pts.InsertLast(vec3(json[glyph][v][0],json[glyph][v][1],json[glyph][v][2]));
             }
             auto char = glyph[0];
-            auto gIx = int(char) - fontCharOffset;
+            auto gIx = int(char); // - fontCharOffset;
             fontGlyphs[gIx].Resize(pts.Length);
             for (uint v = 0; v < pts.Length; v++) {
                 fontGlyphs[gIx][v] = pts[v];
