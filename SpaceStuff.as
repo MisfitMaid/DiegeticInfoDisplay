@@ -53,7 +53,7 @@ namespace DID {
     // stolen from hats mod
     vec3 projectHatSpace(vec3 point) {
         auto visState = VehicleState::GetVis(GetApp().GameScene, VehicleState::GetViewingPlayer()).AsyncState;
-        vec3 localPos = vec3(visState.Left.x, visState.Up.y, visState.Dir.z) * point;
+        vec3 localPos = (visState.Left * point.x) + (visState.Up * point.y) + (visState.Dir * point.z);
         return visState.Position + localPos + visState.Dir + visState.Up;
     }
 }
