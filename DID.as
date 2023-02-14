@@ -56,18 +56,19 @@ namespace DID {
         for (uint i = 0; i < 4; i++) {
             maxLen = Math::Max(lanes[i].content.Length, maxLen);
         }
+        // copying to leftPadded is cheap enough to be negligiable performance wise
         for (uint i = 0; i < 4; i++) {
-            leftPadded[i] = lanes[i].content;
-            while (leftPadded[i].Length < maxLen) {
-                leftPadded[i] = " "+leftPadded[i]; // str_pad when 🥺
-            }
+            leftPadded[i] = LOOOOOOOONG.SubStr(0, maxLen - lanes[i].content.Length) + lanes[i].content;
+            // while (leftPadded[i].Length < maxLen) {
+            //     leftPadded[i] = " "+leftPadded[i]; // str_pad when 🥺
+            // }
         }
 
         int leftOffset = (diegeticHorizontalDistance + maxLen*100) * -1;
         int rightOffset = diegeticHorizontalDistance;
         for (uint i = 0; i < 4; i++) {
-            LaneConfig@ left = lanes[i];
-            LaneConfig@ right = lanes[i+4];
+            // LaneConfig@ left = lanes[i];
+            // LaneConfig@ right = lanes[i+4];
 
             if (diegeticOutline.w > 0.0) {
                 nvg::StrokeColor(diegeticOutline);
@@ -91,8 +92,10 @@ namespace DID {
     DID::LaneConfig@[] lanes;
     dictionary font;
 
+
+
     void Main() {
-        init();
+        OnSettingsChanged();
         while (true) {
             auto app = cast<CTrackMania>(GetApp());
             auto map = app.RootMap;
@@ -108,6 +111,7 @@ namespace DID {
 
     void OnSettingsChanged() {
         init();
+        SetLaneProvidersFromSettings();
     }
 
     void init() {
@@ -150,10 +154,7 @@ namespace DID {
 
     }
 
-    void step() {
-        if (!diegeticEnabled) return;
-        // this is kinda dumb but whatever
-
+    void SetLaneProvidersFromSettings() {
         @lanes[0] = getInfoText(LineL1, 0);
         @lanes[1] = getInfoText(LineL2, 1);
         @lanes[2] = getInfoText(LineL3, 2);
@@ -163,15 +164,19 @@ namespace DID {
         @lanes[5] = getInfoText(LineR2, 5);
         @lanes[6] = getInfoText(LineR3, 6);
         @lanes[7] = getInfoText(LineR4, 7);
+    }
 
+    void step() {
+        if (!diegeticEnabled) return;
+        // this is kinda dumb but whatever
+        SetLaneProvidersFromSettings();
         return;
     }
 
     // using one instance of this only saves 0.05ms
+    LaneConfig defaults();
     LaneConfig@ getInfoText(const string &in type, uint slot) {
-        LaneConfig defaults();
         defaults.color = getDefaultLaneColor(slot);
-        defaults.content = "";
 
         if (renderDemo) {
             DemoProvider dp;

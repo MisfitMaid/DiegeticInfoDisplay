@@ -1,6 +1,6 @@
 #if DEPENDENCY_MLFEEDRACEDATA && DEPENDENCY_MLHOOK
 namespace DID {
-        
+
         class RaceTimeHandler : LaneProvider {
             LaneProviderSettings@ getProviderSetup() {
                 LaneProviderSettings settings;
@@ -15,7 +15,6 @@ namespace DID {
                 const MLFeed::HookRaceStatsEventsBase_V3@ mlf = MLFeed::GetRaceData_V3();
                 const MLFeed::PlayerCpInfo_V3@ plf = mlf.GetPlayer_V3(MLFeed::LocalPlayersName);
                 if (plf.spawnStatus == MLFeed::SpawnStatus::NotSpawned) return defaults;
-                
                 c.content = (plf.CurrentRaceTime < 0) ? Time::Format(0) : Time::Format(plf.CurrentRaceTime);
                 return c;
             }
@@ -97,7 +96,7 @@ namespace DID {
                 const MLFeed::HookRaceStatsEventsBase_V3@ mlf = MLFeed::GetRaceData_V3();
                 const MLFeed::PlayerCpInfo_V3@ plf = mlf.GetPlayer_V3(MLFeed::LocalPlayersName);
                 if (plf.spawnStatus == MLFeed::SpawnStatus::NotSpawned) return defaults;
-                
+
                 c.content = getTotLaps() == 1 ? "" : Text::Format("%d", (plf.CpCount / (mlf.CpCount+1))+1)+" / "+Text::Format("%d", mlf.LapCount);
                 return c;
             }
@@ -117,7 +116,7 @@ namespace DID {
                 const MLFeed::HookRaceStatsEventsBase_V3@ mlf = MLFeed::GetRaceData_V3();
                 const MLFeed::PlayerCpInfo_V3@ plf = mlf.GetPlayer_V3(MLFeed::LocalPlayersName);
                 if (plf.spawnStatus == MLFeed::SpawnStatus::NotSpawned) return defaults;
-                
+
                 c.content = Text::Format("%d", (plf.CpCount / (mlf.CpCount+1))+1)+" / "+Text::Format("%d", mlf.LapCount);
                 return c;
             }
@@ -137,7 +136,7 @@ namespace DID {
                 const MLFeed::HookRaceStatsEventsBase_V3@ mlf = MLFeed::GetRaceData_V3();
                 const MLFeed::PlayerCpInfo_V3@ plf = mlf.GetPlayer_V3(MLFeed::LocalPlayersName);
                 if (plf.spawnStatus == MLFeed::SpawnStatus::NotSpawned) return defaults;
-                
+
                 c.content = Text::Format("%d", plf.CpCount % (mlf.CpCount+1))+" / "+Text::Format("%d", mlf.CpCount);
                 return c;
             }

@@ -1,5 +1,5 @@
 namespace DID {
-    const string LOOOOOOOOOOOOOOONG = "                         ";
+    const string LOOOOOOOONG = "                         ";
 
     void drawString(const string &in str, const vec2 &in start, const float &in z) {
         for (int i = 0; i < str.Length; i++) {
