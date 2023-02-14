@@ -136,7 +136,7 @@ namespace DID {
         }
     }
 
-    class CurrenCheckpointHandler : LaneProvider {
+    class CurrentCheckpointHandler : LaneProvider {
         LaneProviderSettings@ getProviderSetup() {
             LaneProviderSettings settings;
             settings.author = "MisfitMaid";

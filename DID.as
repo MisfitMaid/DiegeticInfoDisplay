@@ -129,7 +129,7 @@ namespace DID {
         registerLaneProviderAddon(SplitDeltaHandler());
         registerLaneProviderAddon(CurrentLapHandler());
         registerLaneProviderAddon(CurrentLapAlwaysHandler());
-        registerLaneProviderAddon(CurrenCheckpointHandler());
+        registerLaneProviderAddon(CurrentCheckpointHandler());
         registerLaneProviderAddon(NoRespawnTimeHandler());
         registerLaneProviderAddon(NoRespawnSplitsHandler());
 #endif
