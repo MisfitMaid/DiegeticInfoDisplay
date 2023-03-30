@@ -172,7 +172,7 @@ void RenderSettingsHelp()
 
 	UI::Markdown(Icons::Patreon + " [https://patreon.com/MisfitMaid](https://patreon.com/MisfitMaid)");
 	UI::Markdown(Icons::Paypal + " [https://paypal.me/MisfitMaid](https://paypal.me/MisfitMaid)");
-	UI::Markdown(Icons::Github + " [https://github.com/sylae/DiegeticInfoDisplay](https://github.com/sylae/DiegeticInfoDisplay)");
+	UI::Markdown(Icons::Github + " [https://github.com/MisfitMaid/DiegeticInfoDisplay](https://github.com/MisfitMaid/DiegeticInfoDisplay)");
 	UI::Markdown(Icons::Discord + " [https://discord.gg/BdKpuFcYzG](https://discord.gg/BdKpuFcYzG)");
 	UI::Markdown(Icons::Twitch + " [https://twitch.tv/MisfitMaid](https://twitch.tv/MisfitMaid)");
 }
