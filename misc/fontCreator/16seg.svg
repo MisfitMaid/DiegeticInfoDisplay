@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - Copyright (c) 2023 Keira Dueck <sylae@calref.net>
+  - Use of this source code is governed by the MIT license, which
+  - can be found in the LICENSE file.
+  -->
+
 <svg width="100" height="200" version="1.1" viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
-  <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="5px">
-    <path id="a1" d="m 22.4  19.7     h  29.1"/>
-    <path id="a2" d="m 62.4  19.7     h  29.1"/>
-    <path id="b"  d="m 96.5  25.1  -6.0  68.9"/>
-    <path id="c"  d="m 89.5 105.1  -6.0  68.9"/>
-    <path id="d1" d="m  8.3 179.4     h  29.1"/>
-    <path id="d2" d="m 48.4 179.4     h  29.1"/>
-    <path id="e"  d="m  9.4 105.1  -6.0  68.9"/>
-    <path id="f"  d="m 16.5  25.0  -6.0  68.9"/>
-    <path id="g1" d="m 15.4  99.6     h  29.1"/>
-    <path id="g2" d="m 55.4  99.6     h  29.1"/>
-    <path id="h"  d="m 24.4  27.7  16.8  65.7"/>
-    <path id="i"  d="m 56.5  25.1  -6.0  68.9"/>
-    <path id="j"  d="m 88.1  27.7 -28.4  65.7"/>
-    <path id="k"  d="m 11.8 171.5  28.4 -65.7"/>
-    <path id="l"  d="m 49.5 105.1  -6.0  68.9"/>
-    <path id="m"  d="m 75.5 171.5 -16.8 -65.7"/>
-    <path id="dp" d="m 89.6 182.2   0.3  -4.4"/>
-  </g>
+    <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="5px">
+        <path id="a1" d="m 22.4  19.7     h  29.1" stroke="red"/>
+        <path id="a2" d="m 62.4  19.7     h  29.1" stroke="orange"/>
+        <path id="b" d="m 96.5  25.1  -6.0  68.9" stroke="yellow"/>
+        <path id="c" d="m 89.5 105.1  -6.0  68.9" stroke="green"/>
+        <path id="d1" d="m  8.3 179.4     h  29.1" stroke="blue"/>
+        <path id="d2" d="m 48.4 179.4     h  29.1" stroke="indigo"/>
+        <path id="e" d="m  9.4 105.1  -6.0  68.9" stroke="violet"/>
+        <path id="f" d="m 16.5  25.0  -6.0  68.9" stroke="white"/>
+        <path id="g1" d="m 15.4  99.6     h  29.1" stroke="black"/>
+        <path id="g2" d="m 55.4  99.6     h  29.1" stroke="grey"/>
+        <path id="h" d="m 24.4  27.7  16.8  65.7" stroke="lime"/>
+        <path id="i" d="m 56.5  25.1  -6.0  68.9" stroke="olive"/>
+        <path id="j" d="m 88.1  27.7 -28.4  65.7" stroke="tan"/>
+        <path id="k" d="m 11.8 171.5  28.4 -65.7" stroke="maroon"/>
+        <path id="l" d="m 49.5 105.1  -6.0  68.9" stroke="teal"/>
+        <path id="m" d="m 75.5 171.5 -16.8 -65.7" stroke="cyan"/>
+        <path id="dp" d="m 89.6 182.2   0.3  -4.4" stroke="red"/>
+    </g>
 </svg>
