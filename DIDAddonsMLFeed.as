@@ -186,7 +186,7 @@ namespace DID {
             LaneConfig c = defaults;
             if (plf is null) return c;
             if (plf.spawnStatus == MLFeed::SpawnStatus::NotSpawned || plf.TimeLostToRespawns == 0) return c;
-            if (plf.BestRaceTimes.Length < plf.cpCount) return c;
+            if (plf.BestRaceTimes.Length < uint(plf.cpCount)) return c;
             auto cpMs = int(plf.BestRaceTimes[plf.cpCount-1]) - plf.LastTheoreticalCpTime;
             if ((plf.TheoreticalRaceTime - plf.LastTheoreticalCpTime) < int(deltaTimeDuration))
                 PrepareConfigCpSplitsTime(cpMs, c);
