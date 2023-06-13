@@ -6,7 +6,7 @@ namespace DID {
             auto char = str[i];
             // skip space
             if (char == 0x20) continue;
-            vec2 offset = start + vec2(i*diegeticLetterSpacing, 0);
+            vec2 offset = start + vec2(i*CSP.diegeticLetterSpacing, 0);
             // All unit8s have an array associated with it (even if empty)
             drawGlyph(GetFontGlyph(char), offset, z);
         }
@@ -19,7 +19,7 @@ namespace DID {
     // saves 0.02 mb
     // void drawGlyph(const vec3[] &in points, const vec2 &in start, float z) {
     void drawGlyph(const vec3[] &in points, const vec2 &in start, float z) {
-        _context.scale = -0.001*diegeticScale;
+        _context.scale = -0.001*CSP.diegeticScale;
         _context.offset = start;
         _context.z = z;
 

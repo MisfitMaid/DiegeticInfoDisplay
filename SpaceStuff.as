@@ -1,5 +1,13 @@
 namespace DID {
 
+    class CameraSpecificSettings {
+        uint diegeticHorizontalDistance;
+        float diegeticLineSpacing;
+        float diegeticLetterSpacing;
+        vec3 diegeticCustomOffset;
+        float diegeticScale;
+    }
+
     // handles all of our transforms to screen space from car space
 
     // caching this saves 50% draw time in demo mode

@@ -13,21 +13,6 @@ bool renderDemo = false;
 [Setting category="Rendering" min=0 max=10 drag name="Stroke Width" description="How thicc to draw the diegetic text"]
 float diegeticStrokeWidth = 3.0;
 
-[Setting category="Rendering" min=0 max=5000 drag name="Horizontal Distance" description="How far apart the left and right columns are"]
-uint diegeticHorizontalDistance = 1000;
-
-[Setting category="Rendering" min=0 max=5 drag name="Line Spacing" description="How far apart to place each row"]
-float diegeticLineSpacing = 0.75;
-
-[Setting category="Rendering" min=50 max=200 drag name="Letter Spacing" description="How much spacing to put between each character"]
-float diegeticLetterSpacing = 110.0;
-
-[Setting category="Rendering" name="Custom offset" description="Advanced adjustment, good luck!"]
-vec3 diegeticCustomOffset = vec3(0,0,0);
-
-[Setting category="Rendering" drag name="Scale" description="Advanced adjustment, good luck!"]
-float diegeticScale = 1.0;
-
 [Setting category="Rendering" name="Font" description="Select a less-performance-intensive font, or add your own custom font (~/OpenplanetNext/PluginStorage/DID/font.custom.json)"];
 DID::Fonts diegeticFont = DID::Fonts::SixteenSegment;
 

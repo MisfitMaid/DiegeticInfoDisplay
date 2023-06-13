@@ -33,6 +33,8 @@ void OnSettingsChanged() {
 }
 
 namespace DID {
+    CameraSpecificSettings CSP;
+
     void Render() {
         if (!diegeticEnabled) return;
         auto vp = VehicleState::GetViewingPlayer();
@@ -44,7 +46,32 @@ namespace DID {
 
         DID::ResetDrawState(vis);
 
-        nvg::StrokeWidth(diegeticStrokeWidth);
+        switch (Camera::GetCurrentGameCamera()) {
+            case Camera::ActiveCam::Cam3:
+                CSP.diegeticCustomOffset = diegeticCustomOffsetCam3;
+                CSP.diegeticHorizontalDistance = diegeticHorizontalDistanceCam3;
+                CSP.diegeticLetterSpacing = diegeticLetterSpacingCam3;
+                CSP.diegeticLineSpacing = diegeticLineSpacingCam3;
+                CSP.diegeticScale = diegeticScaleCam3;
+                break;
+            case Camera::ActiveCam::Cam3Alt:
+                CSP.diegeticCustomOffset = diegeticCustomOffsetCam3a;
+                CSP.diegeticHorizontalDistance = diegeticHorizontalDistanceCam3a;
+                CSP.diegeticLetterSpacing = diegeticLetterSpacingCam3a;
+                CSP.diegeticLineSpacing = diegeticLineSpacingCam3a;
+                CSP.diegeticScale = diegeticScaleCam3a;
+                break;
+            default:
+                CSP.diegeticCustomOffset = diegeticCustomOffset;
+                CSP.diegeticHorizontalDistance = diegeticHorizontalDistance;
+                CSP.diegeticLetterSpacing = diegeticLetterSpacing;
+                CSP.diegeticLineSpacing = diegeticLineSpacing;
+                CSP.diegeticScale = diegeticScale;
+                break;
+
+        }
+
+        nvg::StrokeWidth(diegeticStrokeWidth*CSP.diegeticScale);
         nvg::LineCap(nvg::LineCapType::Butt);
         nvg::LineJoin(nvg::LineCapType::Butt);
         nvg::MiterLimit(0);
@@ -61,25 +88,25 @@ namespace DID {
             leftPadded[i] = LOOOOOOOONG.SubStr(0, maxLen - lanes[i].content.Length) + lanes[i].content;
         }
 
-        int leftOffset = (diegeticHorizontalDistance + maxLen*100) * -1;
-        int rightOffset = diegeticHorizontalDistance;
+        int leftOffset = (CSP.diegeticHorizontalDistance + maxLen*100) * -1;
+        int rightOffset = CSP.diegeticHorizontalDistance;
         for (uint i = 0; i < 4; i++) {
             if (diegeticOutline.w > 0.0) {
                 nvg::StrokeColor(diegeticOutline);
                 nvg::LineCap(nvg::LineCapType::Round);
                 nvg::LineJoin(nvg::LineCapType::Round);
-                nvg::StrokeWidth(diegeticStrokeWidth*3.0);
-                DID::drawString(leftPadded[i], vec2(leftOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
-                DID::drawString(lanes[i+4].content, vec2(rightOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
-                nvg::StrokeWidth(diegeticStrokeWidth);
+                nvg::StrokeWidth(diegeticStrokeWidth*3.0*CSP.diegeticScale);
+                DID::drawString(leftPadded[i], vec2(leftOffset, 0)+CSP.diegeticCustomOffset.xy, CSP.diegeticCustomOffset.z + i*CSP.diegeticLineSpacing*-1);
+                DID::drawString(lanes[i+4].content, vec2(rightOffset, 0)+CSP.diegeticCustomOffset.xy, CSP.diegeticCustomOffset.z + i*CSP.diegeticLineSpacing*-1);
+                nvg::StrokeWidth(diegeticStrokeWidth*CSP.diegeticScale);
                 nvg::LineCap(nvg::LineCapType::Butt);
                 nvg::LineJoin(nvg::LineCapType::Butt);
             }
 
             nvg::StrokeColor(lanes[i].color);
-            DID::drawString(leftPadded[i], vec2(leftOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
+            DID::drawString(leftPadded[i], vec2(leftOffset, 0)+CSP.diegeticCustomOffset.xy, CSP.diegeticCustomOffset.z + i*CSP.diegeticLineSpacing*-1);
             nvg::StrokeColor(lanes[i+4].color);
-            DID::drawString(lanes[i+4].content, vec2(rightOffset, 0)+diegeticCustomOffset.xy, diegeticCustomOffset.z + i*diegeticLineSpacing*-1);
+            DID::drawString(lanes[i+4].content, vec2(rightOffset, 0)+CSP.diegeticCustomOffset.xy, CSP.diegeticCustomOffset.z + i*CSP.diegeticLineSpacing*-1);
         }
     }
 
@@ -178,7 +205,9 @@ namespace DID {
 
         if (renderDemo) {
             DemoProvider dp;
-            return dp.getLaneConfig(defaults);
+            LaneConfig lc = dp.getLaneConfig(defaults);
+            lc.content = Text::Format("%d", slot) + " " + lc.content;
+            return lc;
         }
 
         try {
