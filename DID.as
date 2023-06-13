@@ -70,6 +70,7 @@ namespace DID {
                 break;
 
         }
+        CSP.backwards = Camera::IsBehind(projectHatSpace(vec3(0, 0, 1000))); // kinda cursed but it works lmao
 
         nvg::StrokeWidth(diegeticStrokeWidth*CSP.diegeticScale);
         nvg::LineCap(nvg::LineCapType::Butt);

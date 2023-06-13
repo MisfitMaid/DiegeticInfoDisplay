@@ -6,6 +6,7 @@ namespace DID {
         float diegeticLetterSpacing;
         vec3 diegeticCustomOffset;
         float diegeticScale;
+        bool backwards;
     }
 
     // handles all of our transforms to screen space from car space
