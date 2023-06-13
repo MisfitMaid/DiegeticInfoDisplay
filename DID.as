@@ -265,7 +265,10 @@ namespace DID {
                 json = Json::FromFile(IO::FromStorageFolder("font.custom.json"));
                 break;
             case Fonts::SevenSegment:
-                json = Json::FromFile("font.sevenSegment.json");
+                json = Json::FromFile("font.7seg.json");
+                break;
+            case Fonts::SixteenSegment:
+                json = Json::FromFile("font.16seg.json");
                 break;
             case Fonts::NixieReduced:
                 json = Json::FromFile("font.shittyNixie.json");
@@ -295,6 +298,7 @@ namespace DID {
         Nixie,
         NixieReduced,
         SevenSegment,
+        SixteenSegment,
         Custom
     }
 }
