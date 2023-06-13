@@ -181,6 +181,7 @@ namespace Camera {
 void RenderEarly()
 {
 	Camera::UpdateActiveGameCam();
+    if (Camera::GetCurrent() is null) return;
     iso4 camLoc = Camera::GetCurrent().Location;
 	Camera::g_direction = vec3(camLoc.xz, camLoc.yz, camLoc.zz);
 }
