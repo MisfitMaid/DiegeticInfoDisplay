@@ -146,9 +146,22 @@ string friendlyDropdownName(DID::LaneProviderSettings settings) {
 	return "\\$z" + settings.friendlyName + "\\$666 by " + settings.author + "\\$z";
 }
 
+[SettingsTab name="Provider Preview" order="2" icon="InfoCircle"]
+void RenderSettingsPreview() {
+	for (uint i = 0; i < DID::laneProviders.Length; i++) {
+		DID::LaneProvider@ lp = DID::laneProviders[i];
+		auto lc = lp.getLaneConfig(DID::defaults);
+		string opacity = Text::Format("%f", lc.color.z * 100.f) + "%";
+		UI::InputText(
+			friendlyDropdownName(lp.getProviderSetup()),
+			Text::FormatOpenplanetColor(lc.color.xyz) + lc.content + "\\$z (" + opacity + ")",
+			UI::InputTextFlags::ReadOnly
+		);
+	}
+}
+
 [SettingsTab name="Help & Credits" order="2" icon="QuestionCircle"]
-void RenderSettingsHelp()
-{
+void RenderSettingsHelp() {
 	UI::TextWrapped("DID is currently in early development. If you encounter any issues or have a feature request, please reach out so that I can get it taken care of! :)");
 
 	UI::Separator();
