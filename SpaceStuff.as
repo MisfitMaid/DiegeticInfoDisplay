@@ -63,6 +63,9 @@ namespace DID {
 
     vec3 nvgTrans(TypesetContext@ context, const vec2 &in coords) {
         vec2 ws = (coords+context.offset)*context.scale;
+        if (CSP.backwards) {
+            return Camera::ToScreen(projectHatSpace(vec3(ws.x*-1, ws.y, context.z)));
+        }
         return Camera::ToScreen(projectHatSpace(vec3(ws, context.z)));
     }
 

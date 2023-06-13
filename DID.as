@@ -70,7 +70,11 @@ namespace DID {
                 break;
 
         }
-        CSP.backwards = Camera::IsBehind(projectHatSpace(vec3(0, 0, 1000))); // kinda cursed but it works lmao
+
+        float camDot = Math::Dot(Camera::GetCurrentLookingDirection(), vis.AsyncState.Dir);
+
+        CSP.backwards = camDot < 0; // kinda cursed but it works lmao
+        
 
         nvg::StrokeWidth(diegeticStrokeWidth*CSP.diegeticScale);
         nvg::LineCap(nvg::LineCapType::Butt);
@@ -80,17 +84,27 @@ namespace DID {
         // get max length of left items to add padding
         int maxLen = 0;
         string[] leftPadded;
+        string[] rightPadded;
         leftPadded.Resize(4);
-        for (uint i = 0; i < 4; i++) {
+        rightPadded.Resize(4);
+        for (uint i = 0; i < 8; i++) {
             maxLen = Math::Max(lanes[i].content.Length, maxLen);
         }
         // copying to leftPadded is cheap enough to be negligiable performance wise
         for (uint i = 0; i < 4; i++) {
             leftPadded[i] = LOOOOOOOONG.SubStr(0, maxLen - lanes[i].content.Length) + lanes[i].content;
+            rightPadded[i] = LOOOOOOOONG.SubStr(0, maxLen - lanes[i+4].content.Length) + lanes[i+4].content;
         }
 
-        int leftOffset = (CSP.diegeticHorizontalDistance + maxLen*100) * -1;
-        int rightOffset = CSP.diegeticHorizontalDistance;
+        int leftOffset, rightOffset;
+        if (CSP.backwards) {
+            leftOffset = CSP.diegeticHorizontalDistance;
+            rightOffset = (CSP.diegeticHorizontalDistance + maxLen*100)*-1;
+        } else {
+            leftOffset = (CSP.diegeticHorizontalDistance + maxLen*100) * -1;
+            rightOffset = CSP.diegeticHorizontalDistance;
+        }
+        
         for (uint i = 0; i < 4; i++) {
             if (diegeticOutline.w > 0.0) {
                 nvg::StrokeColor(diegeticOutline);
