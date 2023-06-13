@@ -29,7 +29,7 @@ vec3 diegeticCustomOffset = vec3(0,0,0);
 float diegeticScale = 1.0;
 
 [Setting category="Rendering" name="Font" description="Select a less-performance-intensive font, or add your own custom font (~/OpenplanetNext/PluginStorage/DID/font.custom.json)"];
-DID::Fonts diegeticFont = DID::Fonts::Nixie;
+DID::Fonts diegeticFont = DID::Fonts::SixteenSegment;
 
 [Setting category="Colors" color name="Diegetic Text Color"]
 vec4 diegeticColor = vec4(1.0,1.0,1.0,0.75);
