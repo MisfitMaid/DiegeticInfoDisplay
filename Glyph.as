@@ -13,11 +13,8 @@ namespace DID {
 
     }
 
-    // just one object is fine. saves .1ms mb
     TypesetContext _context;
 
-    // saves 0.02 mb
-    // void drawGlyph(const vec3[] &in points, const vec2 &in start, float z) {
     void drawGlyph(const vec3[] &in points, const vec2 &in start, float z) {
         _context.scale = -0.001*CSP.diegeticScale;
         _context.offset = start;

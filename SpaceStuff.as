@@ -9,24 +9,17 @@ namespace DID {
         bool backwards;
     }
 
-    // handles all of our transforms to screen space from car space
-
-    // caching this saves 50% draw time in demo mode
     CSceneVehicleVis@ vis = null;
     void ResetDrawState(CSceneVehicleVis@ _vis) {
         @vis = _vis;
     }
 
     class TypesetContext {
-        // svg2nvg calls have a context object, to enable the laziest copy-pasting
-        // possible we'll just use that to pass data
-
         float scale;
         vec2 offset;
         float z;
     }
 
-    // Passing handles here saves 0.5 ms per frame
     bool nvgLineTo(TypesetContext@ context, float x, float y) {
         vec3 line = nvgTrans(context, x, y);
         if (line.z < 0) {
@@ -45,7 +38,6 @@ namespace DID {
         return false;
     }
 
-    // const &in for all vecs and arrays of vecs saves .5ms
     bool nvgBezierTo(TypesetContext@ context, const vec2 &in c1, const vec2 &in c2, const vec2 &in dest) {
         vec3 c1_3 = nvgTrans(context, c1);
         if (c1_3.z >= 0) return false;

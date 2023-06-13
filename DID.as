@@ -73,7 +73,7 @@ namespace DID {
 
         float camDot = Math::Dot(Camera::GetCurrentLookingDirection(), vis.AsyncState.Dir);
 
-        CSP.backwards = camDot < 0; // kinda cursed but it works lmao
+        CSP.backwards = camDot < 0;
         
 
         nvg::StrokeWidth(diegeticStrokeWidth*CSP.diegeticScale);
@@ -88,7 +88,7 @@ namespace DID {
         for (uint i = 0; i < 8; i++) {
             maxLen = Math::Max(lanes[i].content.Length, maxLen);
         }
-        // copying to leftPadded is cheap enough to be negligiable performance wise
+
         for (uint i = 0; i < 4; i++) {
             leftPadded[i] = LOOOOOOOONG.SubStr(0, maxLen - lanes[i].content.Length) + lanes[i].content;
         }
@@ -210,7 +210,7 @@ namespace DID {
         return;
     }
 
-    // using one instance of this only saves 0.05ms
+
     LaneConfig defaults();
     LaneConfig@ getInfoText(const string &in type, uint slot) {
         defaults.color = getDefaultLaneColor(slot);
@@ -285,12 +285,7 @@ namespace DID {
 
 
     dictionary font;
-    /**
-     * Only chars included currently: [0-9+-.:/]
-     * ascii: 0x30-39 for 0-9
-     * 0x2b for `+`, then `,-./` in order
-     * 0x3a for `:`
-     */
+
     vec3[][] fontGlyphs = array<array<vec3>>(256);
     const vec3[]@ GetFontGlyph(uint8 char) {
         auto ret = fontGlyphs[char];
