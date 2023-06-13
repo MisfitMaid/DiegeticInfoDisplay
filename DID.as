@@ -84,24 +84,21 @@ namespace DID {
         // get max length of left items to add padding
         int maxLen = 0;
         string[] leftPadded;
-        string[] rightPadded;
         leftPadded.Resize(4);
-        rightPadded.Resize(4);
         for (uint i = 0; i < 8; i++) {
             maxLen = Math::Max(lanes[i].content.Length, maxLen);
         }
         // copying to leftPadded is cheap enough to be negligiable performance wise
         for (uint i = 0; i < 4; i++) {
             leftPadded[i] = LOOOOOOOONG.SubStr(0, maxLen - lanes[i].content.Length) + lanes[i].content;
-            rightPadded[i] = LOOOOOOOONG.SubStr(0, maxLen - lanes[i+4].content.Length) + lanes[i+4].content;
         }
 
         int leftOffset, rightOffset;
         if (CSP.backwards) {
             leftOffset = CSP.diegeticHorizontalDistance;
-            rightOffset = (CSP.diegeticHorizontalDistance + maxLen*100)*-1;
+            rightOffset = (CSP.diegeticHorizontalDistance + maxLen*uint(CSP.diegeticLetterSpacing))*-1;
         } else {
-            leftOffset = (CSP.diegeticHorizontalDistance + maxLen*100) * -1;
+            leftOffset = (CSP.diegeticHorizontalDistance + maxLen*uint(CSP.diegeticLetterSpacing)) * -1;
             rightOffset = CSP.diegeticHorizontalDistance;
         }
         
