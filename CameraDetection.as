@@ -5,6 +5,9 @@
  */
 
 namespace Camera {
+
+    bool CameraNodSafe = false;
+
     void UpdateActiveGameCam()
     {
         g_activeCam = ActiveCam::None;
@@ -176,11 +179,25 @@ namespace Camera {
     mat4 g_rotation = mat4::Identity();
     vec3 g_direction = vec3();
     ActiveCam g_activeCam = ActiveCam::None;
+
+    void CheckIfSafe() {
+        string curVer = GetApp().SystemPlatform.ExeVersion;
+        auto req = Net::HttpGet("https://openplanet.dev/plugin/did/config/camera-nod-safe");
+        while (!req.Finished()) yield();
+        if (req.ResponseCode() == 200) {
+            auto js = req.Json();
+            if (js.GetType() == Json::Type::Object && js.HasKey(curVer)) {
+                CameraNodSafe = js[curVer];
+            }
+        }
+    }
 }
 
 void RenderEarly()
 {
-	Camera::UpdateActiveGameCam();
+    if (useCameraDetection == CameraDetectionMode::On || (Camera::CameraNodSafe && useCameraDetection == CameraDetectionMode::Auto)) {
+        Camera::UpdateActiveGameCam();
+    }
     if (Camera::GetCurrent() is null) return;
     iso4 camLoc = Camera::GetCurrent().Location;
 	Camera::g_direction = vec3(camLoc.xz, camLoc.yz, camLoc.zz);

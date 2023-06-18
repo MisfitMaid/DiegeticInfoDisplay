@@ -1,3 +1,13 @@
+// CameraDetection.as stuff
+enum CameraDetectionMode {
+    On,
+    Auto,
+    Off
+}
+
+[Setting category="Advanced" name="Use advanced cam3 detection" description="Advanced detection requires some spicy code due to engine limitations. AUTO will only use this code if it's been manually verified as working. Without advanced detection, a less-accurate fallback will be used."]
+CameraDetectionMode useCameraDetection = CameraDetectionMode::Auto;
+
 // NORMAL
 
 [Setting category="Advanced" min=0 max=5000 drag name="Horizontal Distance" description="How far apart the left and right columns are"]

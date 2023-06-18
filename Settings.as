@@ -160,4 +160,24 @@ void RenderSettingsHelp()
 	UI::Markdown(Icons::Github + " [https://github.com/MisfitMaid/DiegeticInfoDisplay](https://github.com/MisfitMaid/DiegeticInfoDisplay)");
 	UI::Markdown(Icons::Discord + " [https://discord.gg/BdKpuFcYzG](https://discord.gg/BdKpuFcYzG)");
 	UI::Markdown(Icons::Twitch + " [https://twitch.tv/MisfitMaid](https://twitch.tv/MisfitMaid)");
+	
+	UI::Separator();
+	
+	switch (useCameraDetection) {
+		case CameraDetectionMode::Auto:
+			UI::TextWrapped("Advanced camera detection support: " + Camera::CameraNodSafe);
+			break;
+		case CameraDetectionMode::On:
+			UI::TextWrapped("Forced on, current reported status: " + Camera::CameraNodSafe);
+			break;
+		case CameraDetectionMode::Off:
+			UI::TextWrapped("Forced off, current reported status: " + Camera::CameraNodSafe);
+			break;
+	}
+	
+	UI::TextWrapped("Game version: " + GetApp().SystemPlatform.ExeVersion);
+	UI::SameLine();
+	if (UI::Button(Icons::Clipboard)) {
+		IO::SetClipboard(GetApp().SystemPlatform.ExeVersion);
+	}
 }
