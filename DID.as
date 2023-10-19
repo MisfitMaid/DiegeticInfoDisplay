@@ -89,7 +89,7 @@ namespace DID {
         float camDot = Math::Dot(Camera::GetCurrentLookingDirection(), vis.AsyncState.Dir);
 
         CSP.backwards = camDot < 0;
-        
+
 
         nvg::StrokeWidth(diegeticStrokeWidth*CSP.diegeticScale);
         nvg::LineCap(nvg::LineCapType::Butt);
@@ -116,7 +116,7 @@ namespace DID {
             leftOffset = (CSP.diegeticHorizontalDistance + maxLen*uint(CSP.diegeticLetterSpacing)) * -1;
             rightOffset = CSP.diegeticHorizontalDistance;
         }
-        
+
         for (uint i = 0; i < 4; i++) {
             if (diegeticOutline.w > 0.0) {
                 nvg::StrokeColor(diegeticOutline);
@@ -192,6 +192,10 @@ namespace DID {
 #if DEPENDENCY_SPLITSPEEDS
         DID::registerLaneProviderAddon(SplitSpeedsDiffProvider());
         DID::registerLaneProviderAddon(SplitSpeedsSpeedProvider());
+#endif
+
+#if DEPENDENCY_AK_HINTS || DEPENDENCY_AK_HINTS_DEV
+        DID::registerLaneProviderAddon(AkHintsHandler());
 #endif
 
         // fill all our slots with empty info to prevent NPE on first frame running
