@@ -16,6 +16,9 @@ float diegeticStrokeWidth = 3.0;
 [Setting category="Rendering" name="Font" description="Select a less-performance-intensive font, or add your own custom font (~/OpenplanetNext/PluginStorage/DID/font.custom.json)"];
 DID::Fonts diegeticFont = DID::Fonts::SixteenSegment;
 
+[Setting category="Colors" name="Fill Mode (currently bugged)" description="By default, DID only 'paints' the outline of letters. Depending on your font selection, you may want the entire shape to be filled."]
+bool diegeticFillmode = false;
+
 [Setting category="Colors" color name="Diegetic Text Color"]
 vec4 diegeticColor = vec4(1.0,1.0,1.0,0.75);
 

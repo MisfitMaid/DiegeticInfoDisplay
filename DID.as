@@ -130,9 +130,17 @@ namespace DID {
                 nvg::LineJoin(nvg::LineCapType::Butt);
             }
 
-            nvg::StrokeColor(lanes[i].color);
+            if (diegeticFillmode) {
+                nvg::FillColor(lanes[i].color);
+            } else {
+                nvg::StrokeColor(lanes[i].color);
+            }
             DID::drawString(leftPadded[i], vec2(leftOffset, 0)+CSP.diegeticCustomOffset.xy, CSP.diegeticCustomOffset.z + i*CSP.diegeticLineSpacing*-1);
-            nvg::StrokeColor(lanes[i+4].color);
+            if (diegeticFillmode) {
+                nvg::FillColor(lanes[i+4].color);
+            } else {
+                nvg::StrokeColor(lanes[i+4].color);
+            }
             DID::drawString(lanes[i+4].content, vec2(rightOffset, 0)+CSP.diegeticCustomOffset.xy, CSP.diegeticCustomOffset.z + i*CSP.diegeticLineSpacing*-1);
         }
     }

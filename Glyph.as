@@ -35,7 +35,11 @@ namespace DID {
                     didRender = nvgLineTo(_context, points[i].y,points[i].z);
                     break;
                 case 3: // stroke
-                    nvg::Stroke();
+                    if (diegeticFillmode) {
+                        nvg::Fill();
+                    } else {
+                        nvg::Stroke();
+                    }
                     break;
                 case 4: // set bezier y1
                     bez1 = vec2(points[i].y, points[i].z);
