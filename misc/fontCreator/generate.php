@@ -5,6 +5,18 @@
  * can be found in the LICENSE file.
  */
 
+// WARNING TO THE FUTURE
+// this script expects a very particularly-formatted SVG file. Unfortunately, the effort to properly document it would
+// take more time and effort than just rewriting the damn thing. in lieu of that, until I have time to properly fix this
+// please reference the following discord message:
+// https://canary.discord.com/channels/788326497177698315/788326497177698318/1292029356821970945
+//
+// tldr: use inkscape's flatten beziers (DID supports them, but this script doesnt), and ensure commands are padded with
+// spaces on either side. each path should only be a single "shape", so ":" should be two paths (they will be merged by
+// the glyph mapper json).
+// reference https://gist.github.com/sylae/a1fe896c924cb029368055da3b834d48 for an example of expected input and output.
+
+
 $font = $argv[1] ?? false;
 if (!$font) {
     die("Usage: php generate.php FONT");
