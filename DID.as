@@ -47,19 +47,16 @@ namespace DID {
         DID::ResetDrawState(vis);
 
         Camera::ActiveCam curCam;
-        if (useCameraDetection == CameraDetectionMode::On || (Camera::CameraNodSafe && useCameraDetection == CameraDetectionMode::Auto)) {
-            curCam = Camera::GetCurrentGameCamera();
+        vec3 cam1 = DID::projectHatSpace(vec3(0,0,-2));
+        vec3 cam3 = DID::projectHatSpace(vec3(0,0,-1));
+        if (Camera::IsBehind(cam3)) {
+            curCam = Camera::ActiveCam::Cam3Alt;
+        } else if (Camera::IsBehind(cam1)) {
+            curCam = Camera::ActiveCam::Cam3;
         } else {
-            vec3 cam1 = DID::projectHatSpace(vec3(0,0,-2));
-            vec3 cam3 = DID::projectHatSpace(vec3(0,0,-1));
-            if (Camera::IsBehind(cam3)) {
-                curCam = Camera::ActiveCam::Cam3Alt;
-            } else if (Camera::IsBehind(cam1)) {
-                curCam = Camera::ActiveCam::Cam3;
-            } else {
-                curCam = Camera::ActiveCam::Cam1;
-            }
+            curCam = Camera::ActiveCam::Cam1;
         }
+        
 
         switch (curCam) {
             case Camera::ActiveCam::Cam3:
@@ -212,12 +209,6 @@ namespace DID {
         }
 
         SetLaneProvidersFromSettings();
-
-        startnew(initYield);
-    }
-
-    void initYield() {
-        Camera::CheckIfSafe();
     }
 
     // Currently, this takes about 0.3ms for me which is approx 1/3 of total execution time with a basic DID layout.
