@@ -14,7 +14,7 @@ namespace DID {
                 
         }
     }
-    Meta::PluginCoroutine@ MLFeedCacheLocalPlayerCoro = startnew(CacheLocalPlayerCoro);
+    awaitable@ MLFeedCacheLocalPlayerCoro = startnew(CacheLocalPlayerCoro);
 
     class RaceTimeHandler : LaneProvider {
         LaneProviderSettings@ getProviderSetup() {
