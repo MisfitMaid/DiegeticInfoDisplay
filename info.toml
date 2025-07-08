@@ -2,7 +2,7 @@
 name = "Diegetic Information Display"
 author = "MisfitMaid"
 category = "Overlay"
-version = "0.5.3"
+version = "0.5.4"
 siteid = 311
 
 [script]

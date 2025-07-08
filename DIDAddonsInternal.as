@@ -36,12 +36,13 @@ namespace DID {
 
         }
 
+#if SIG_SCHOOL
         class SideSpeedProvider : LaneProvider {
             LaneProviderSettings@ getProviderSetup() {
                 LaneProviderSettings settings;
                 settings.author = "MisfitMaid";
                 settings.internalName = "DID/SideSpeed";
-                settings.friendlyName = "Speed (side)";
+                settings.friendlyName = "[School] Speed (side)";
                 return settings;
             }
 
@@ -53,6 +54,7 @@ namespace DID {
             }
 
         }
+#endif
 
         class SteeringProvider : LaneProvider {
             LaneProviderSettings@ getProviderSetup() {

@@ -171,7 +171,9 @@ namespace DID {
 
         registerLaneProviderAddon(NullProvider());
         registerLaneProviderAddon(FrontSpeedProvider());
+#if SIG_SCHOOL
         registerLaneProviderAddon(SideSpeedProvider());
+#endif
         registerLaneProviderAddon(SteeringProvider());
         registerLaneProviderAddon(WetTiresProvider());
         registerLaneProviderAddon(GearProvider());
