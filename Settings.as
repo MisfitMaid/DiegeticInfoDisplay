@@ -130,7 +130,7 @@ string laneSelectionDropdown(const string &in current, const string &in label) {
 	try {
 		currentLabel = friendlyDropdownName(DID::getProvider(current).getProviderSetup());
 	} catch {
-		currentLabel = "";
+		currentLabel = "Unknown provider: " + current + " (please report this bug)";
 	}
 	if (UI::BeginCombo(label, currentLabel, UI::ComboFlags::None)) {
 		for (uint i = 0; i < DID::laneProviders.Length; i++) {
