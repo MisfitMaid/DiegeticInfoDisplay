@@ -254,7 +254,9 @@ namespace DID {
                 return lp.getLaneConfig(defaults);
             }
         } catch {
-            warn("error requesting string for slot " + Text::Format("%d", slot));
+            if (Meta::IsDeveloperMode()) {
+                warn("error requesting string for slot " + Text::Format("%d", slot));
+            }
         }
         NullProvider np;
         return np.getLaneConfig(defaults);
